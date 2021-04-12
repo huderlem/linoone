@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block title %}{{ mon_species_names[species] }}{% endblock %}
+
+{% block content %}
+<h1>#{{ species_to_national[species] }} - {{ mon_species_names[species] }}</h1>
+
+{% endblock %}
