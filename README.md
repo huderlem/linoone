@@ -39,6 +39,8 @@ In `include/global.h`, make the following modifications:
  #define JOY_HELD_RAW(button) TEST_BUTTON(gMain.heldKeysRaw, button)
 ```
 
+Finally, there is a bug in `pycparser` which makes it choke on various unicode characters in the decomp files. You need to manually apply this fix to your local installation of `pycparser`: https://github.com/eliben/pycparser/issues/415
+
 That's all--you should now be ready to run Linoone. See the Usage section below.
 
 ## Usage
