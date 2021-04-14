@@ -5,6 +5,12 @@
 {% block content %}
 <h1>#{{ national_num }} - {{ mon_species_names[species] }}</h1>
 
+<img src="{{ make_url('images/pokemon/' + national_num + '_front.png') }}">
+<img src="{{ make_url('images/pokemon/' + national_num + '_back.png') }}">
+<img src="{{ make_url('images/pokemon/' + national_num + '_icon.png') }}">
+<br>
+<img src="{{ make_url('images/pokemon/' + national_num + '_front_shiny.png') }}">
+<img src="{{ make_url('images/pokemon/' + national_num + '_back_shiny.png') }}">
 <p><em>{{ mon_dex_entries[national_num].description.replace("\\n", " ") }}</em></p>
 
 <table>
@@ -45,6 +51,42 @@
         {%if mon_base_stats[species].evYield_Speed != "0" %}{{ mon_base_stats[species].evYield_Speed }} Speed{% endif %}
       </td>
     </tr>
+  </tbody>
+</table>
+<br>
+<table>
+  <thead>
+    <tr>
+      <th>Evolutions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if species not in evolution_map %}
+    <tr>
+      <td colspan="2">None</td>
+    </tr>
+    {% else %}
+    {% for evo in evolution_map[species]['from'] %}
+    <tr>
+      <td>Evolves From</td>
+      <td>
+        <a href="{{ make_url('pokedex/' + species_to_national[evo['species']] + '.html') }}">
+          {{ mon_species_names[evo['species']] }}
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+    {% for evo in evolution_map[species]['to'] %}
+    <tr>
+      <td>Evolves Into</td>
+      <td>
+        <a href="{{ make_url('pokedex/' + species_to_national[evo['species']] + '.html') }}">
+          {{ mon_species_names[evo['species']] }}
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+    {% endif %}
   </tbody>
 </table>
 <br>

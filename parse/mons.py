@@ -238,22 +238,22 @@ def parse_species_mapping(config):
     return species_to_national, national_to_species
 
 
-def parse_mon_front_pics(config):
+def parse_mon_gfx(config, pic_table_name, pic_table_file, pic_def_file):
     """
-    Parses and returns the project's mon front pics.
+    Parses and returns the project's mon specified gfx data.
     """
-    filepath = os.path.join(config['project_dir'], "src/data.c")
+    filepath = os.path.join(config['project_dir'], pic_table_file)
     ast = parse_ast_from_file(filepath, config['project_dir'])
 
-    front_pics = get_declaration_from_ast(ast, "gMonFrontPicTable")
-    if front_pics == None:
-        raise Exception("Failed to read mon front pics from %s" % filepath)
+    pics = get_declaration_from_ast(ast, pic_table_name)
+    if pics == None:
+        raise Exception("Failed to read mon pics from %s" % filepath)
 
-    pics_filepath = os.path.join(config['project_dir'], "src/anim_mon_front_pics.c")
+    pics_filepath = os.path.join(config['project_dir'], pic_def_file)
     pics_ast = parse_ast_from_file(pics_filepath, config['project_dir'])
 
     result = {}
-    for item in front_pics.init.exprs:
+    for item in pics.init.exprs:
         if type(item.name[0]) == Constant:
             species = item.name[0].value
             pic_label = item.expr.exprs[0].name
@@ -263,6 +263,27 @@ def parse_mon_front_pics(config):
             result[species] = pic_full_filepath
 
     return result
+
+
+def parse_mon_front_pics(config):
+    """
+    Parses and returns the project's mon specified pics.
+    """
+    return parse_mon_gfx(config, "gMonFrontPicTable", "src/data.c", "src/anim_mon_front_pics.c")
+
+
+def parse_mon_back_pics(config):
+    """
+    Parses and returns the project's mon back pics.
+    """
+    return parse_mon_gfx(config, "gMonBackPicTable", "src/data.c", "src/graphics.c")
+
+
+def parse_mon_shiny_palettes(config):
+    """
+    Parses and returns the project's mon shiny palettes.
+    """
+    return parse_mon_gfx(config, "gMonShinyPaletteTable", "src/data.c", "src/graphics.c")
 
 
 def parse_mon_icon_pics(config):

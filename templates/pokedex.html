@@ -15,7 +15,7 @@
     {% set species = national_to_species[national_num] %}
     <tr>
       <td>{{ national_num }}</td>
-      <td><a href="pokedex/{{ national_num }}.html">{{ mon_species_names[species] }}</a></td>
+      <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
       <td>{{ type_names[mon_base_stats[species].type1] }}{% if mon_base_stats[species].type2 != mon_base_stats[species].type1 %} / {{ type_names[mon_base_stats[species].type2] }}{% endif %}</td>
     </tr>
   {% endfor %}

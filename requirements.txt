@@ -1,3 +1,4 @@
-Jinja2==2.11.1
 pycparser==2.20
+Jinja2==2.11.1
 beautifulsoup4==4.9.3
+Pillow==8.2.0
