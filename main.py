@@ -156,7 +156,11 @@ def load_core_funcs(config):
     """
     Loads the core functions that are made available to the page generator templates.
     """
-    make_url = make_url_factory(config["dist_dir"])
+    root = config["base_url"]
+    if root is None:
+        root = config["dist_dir"]
+
+    make_url = make_url_factory(root)
     return {
         "make_url": make_url,
     }
@@ -172,6 +176,7 @@ if __name__ == "__main__":
     config["project_dir"] = args.project_dir
     config["website_title"] = "pokeemerald"
     config["dist_dir"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dist")
+    config["base_url"] = None
 
     # Load core data and functions to be used by generators and their templates.
     core_data = load_core_data(config)
