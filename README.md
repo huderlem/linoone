@@ -5,7 +5,7 @@ Linoone is a static website generator for Pokémon decomp projects. Many project
 
 ## Setup
 
-Linoone is built with Python 3. It has three dependencies, which are listed in `requirements.txt` and can be installed using the following `pip` command.
+Linoone is built with Python 3. It has a few dependencies, which are listed in `requirements.txt` and can be installed using the following `pip` command.
 ```sh
 pip install -r requirements.txt
 ```
