@@ -5,52 +5,14 @@ import re
 import urllib.parse
 
 import parse.mons as mons
-from parse.util import parse_jasc_file
+from generators.pokedex import PokedexGenerator
+from generators.mon_summaries import MonSummariesGenerator
+from generators.mon_pics import MonPicsGenerator
 
-from jinja2 import Environment, FileSystemLoader, Template, select_autoescape
-from bs4 import BeautifulSoup as bs
-from PIL import Image
-
-def get_sorted_national_dex_numbers(national_to_species):
-    """
-    Gets the sorted numerical list of national dex numbers from the
-    given dict mapping.
-    """
-    keys = list(national_to_species.keys())
-    keys.sort(key = int)
-    return keys
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
-def create_evolution_map(mon_evolutions):
-    """
-    Create a convenient evolution mapping for each species' from and
-    to evolutions.
-    """
-    evos_map = {}
-    for species in mon_evolutions:
-        if species not in evos_map:
-            evos_map[species] = {'from': [], 'to': []}
-
-        evos = mon_evolutions[species]
-        for evo in evos:
-            dest_species = evo['dest_species']
-            if dest_species not in evos_map:
-                evos_map[dest_species] = {'from': [], 'to': []}
-            evos_map[dest_species]['from'].append({
-                'method': evo['method'],
-                'param': evo['param'],
-                'species': species,
-            })
-            evos_map[species]['to'].append({
-                'method': evo['method'],
-                'param': evo['param'],
-                'species': evo['dest_species'],
-            })
-
-    return evos_map
-
-
-data = {
+project_data = {
     "mon_base_stats": {
         "func": mons.parse_base_stats,
         "cache_file": "mon_base_stats.pickle"
@@ -117,64 +79,17 @@ def load_data(name, config, force=False):
     """
     if not force:
         try:
-            f = open(data[name]["cache_file"], "rb")
+            f = open(project_data[name]["cache_file"], "rb")
             d = pickle.load(f)
             f.close()
             return d
         except:
             pass
 
-    f = open(data[name]["cache_file"], "wb")
-    d = data[name]["func"](config)
+    f = open(project_data[name]["cache_file"], "wb")
+    d = project_data[name]["func"](config)
     pickle.dump(d, f)
     return d
-
-
-def generate_mon_pics(species_to_pics, species_to_national, name, crop, force=False):
-    """
-    Processes and generates the various mon images into the distribution directory.
-    """
-    os.makedirs("dist/images/pokemon", exist_ok=True)
-    for species in species_to_pics:
-        if species not in species_to_national:
-            continue
-
-        filepath = species_to_pics[species]
-        png_filepath = re.sub(r'\.4bpp.*', '.png', filepath)
-        dest_filepath = "dist/images/pokemon/%s_%s.png" % (species_to_national[species], name)
-        if force or not os.path.exists(dest_filepath):
-            try:
-                img = Image.open(png_filepath)
-                cropped_img = img.crop(crop)
-                cropped_img.save(dest_filepath)
-            except FileNotFoundError:
-                print("Skipping %s pic for species %s because %s doesn't exist." % (name, species, png_filepath))
-
-
-def generate_shiny_mon_pics(species_to_pics, species_to_national, name, crop, mon_shiny_palettes, force=False):
-    """
-    Processes and generates the various shiny mon images into the distribution directory.
-    """
-    os.makedirs("dist/images/pokemon", exist_ok=True)
-    for species in species_to_pics:
-        if species not in species_to_national:
-            continue
-
-        filepath = species_to_pics[species]
-        png_filepath = re.sub(r'\.4bpp.*', '.png', filepath)
-        dest_filepath = "dist/images/pokemon/%s_%s_shiny.png" % (species_to_national[species], name)
-        if force or not os.path.exists(dest_filepath):
-            try:
-                img = Image.open(png_filepath)
-                cropped_img = img.crop(crop)
-                if img.mode == "P" and species in mon_shiny_palettes and os.path.exists(mon_shiny_palettes[species]) and (force or not os.path.exists(dest_filepath)):
-                    palette_filepath = re.sub(r'\.gbapal.*', '.pal', mon_shiny_palettes[species])
-                    shiny_palette = parse_jasc_file(palette_filepath)
-                    if shiny_palette is not None:
-                        cropped_img.putpalette(shiny_palette)
-                        cropped_img.save(dest_filepath)
-            except FileNotFoundError:
-                print("Skipping shiny %s pic for species %s because %s doesn't exist." % (name, species, png_filepath))
 
 
 def make_url_factory(root):
@@ -199,14 +114,11 @@ def make_url_factory(root):
     return make_url
 
 
-if __name__ == "__main__":
-    argparser = argparse.ArgumentParser("Linoone - Decomp Website Builder")
-    argparser.add_argument("project_dir", help="directory of the decomp project")
-    args = argparser.parse_args()
-
-    config = {}
-    config["project_dir"] = args.project_dir
-    config["website_title"] = "pokeemerald"
+def load_core_data(config):
+    """
+    Loads the core data from the decomp source files, which are made
+    available to the page generator templates.
+    """
     mon_base_stats = load_data("mon_base_stats", config)
     mon_dex_entries = load_data("mon_dex_entries", config)
     mon_learnsets = load_data("mon_learnsets", config)
@@ -221,60 +133,62 @@ if __name__ == "__main__":
     ability_descriptions = load_data("ability_descriptions", config)
     type_names = load_data("type_names", config)
     move_names = load_data("move_names", config)
-    national_dex_numbers = get_sorted_national_dex_numbers(national_to_species)
-    evolution_map = create_evolution_map(mon_evolutions)
+    return {
+        "mon_base_stats": mon_base_stats,
+        "mon_dex_entries": mon_dex_entries,
+        "mon_learnsets": mon_learnsets,
+        "mon_species_names": mon_species_names,
+        "mon_evolutions": mon_evolutions,
+        "species_to_national": species_to_national,
+        "national_to_species": national_to_species,
+        "mon_front_pics": mon_front_pics,
+        "mon_back_pics": mon_back_pics,
+        "mon_icon_pics": mon_icon_pics,
+        "mon_shiny_palettes": mon_shiny_palettes,
+        "ability_names": ability_names,
+        "ability_descriptions": ability_descriptions,
+        "type_names": type_names,
+        "move_names": move_names,
+    }
 
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.makedirs(os.path.join(dir_path, "dist"), exist_ok=True)
-    os.makedirs(os.path.join(dir_path, "dist/pokedex"), exist_ok=True)
-    os.makedirs(os.path.join(dir_path, "dist/images"), exist_ok=True)
-    output_dir = os.path.join(dir_path, "dist")
-    make_url = make_url_factory(output_dir)
 
+def load_core_funcs(config):
+    """
+    Loads the core functions that are made available to the page generator templates.
+    """
+    make_url = make_url_factory(config["dist_dir"])
+    return {
+        "make_url": make_url,
+    }
+
+
+if __name__ == "__main__":
+    argparser = argparse.ArgumentParser("Linoone - Decomp Website Builder")
+    argparser.add_argument("project_dir", help="directory of the decomp project")
+    args = argparser.parse_args()
+
+    # Load program config.
+    config = {}
+    config["project_dir"] = args.project_dir
+    config["website_title"] = "pokeemerald"
+    config["dist_dir"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dist")
+
+    # Load core data and functions to be used by generators and their templates.
+    core_data = load_core_data(config)
+    core_funcs = load_core_funcs(config)
+
+    # Create Jinja templating environment
     env = Environment(
         loader=FileSystemLoader("templates"),
         autoescape=select_autoescape(["html"])
     )
-    template = env.get_template("pokedex.html")
-    output = template.render(
-        **config,
-        make_url=make_url,
-        national_dex_numbers=national_dex_numbers,
-        national_to_species=national_to_species,
-        mon_species_names=mon_species_names,
-        mon_base_stats=mon_base_stats,
-        type_names=type_names
-    )
-    soup = bs(output, "html.parser")
-    prettyHTML = soup.prettify(formatter="html5")
-    with open("dist/pokedex.html", "w", encoding="utf-8") as f:
-        f.write(prettyHTML)
 
-    for national_num in national_dex_numbers:
-        template = env.get_template("mon_summary.html")
-        output = template.render(
-            **config,
-            make_url=make_url,
-            species=national_to_species[national_num],
-            species_to_national=species_to_national,
-            national_num=national_num,
-            mon_species_names=mon_species_names,
-            mon_base_stats=mon_base_stats,
-            type_names=type_names,
-            mon_dex_entries=mon_dex_entries,
-            ability_names=ability_names,
-            mon_learnsets=mon_learnsets,
-            move_names=move_names,
-            evolution_map=evolution_map
-        )
-        soup = bs(output, "html.parser")
-        prettyHTML = soup.prettify(formatter="html5")
-        filepath = "dist/pokedex/%s.html" % national_num
-        with open(filepath, "w", encoding="utf-8") as f:
-            f.write(prettyHTML)
-
-    generate_mon_pics(mon_front_pics, species_to_national, "front", (0, 0, 64, 64))
-    generate_mon_pics(mon_back_pics, species_to_national, "back", (0, 0, 64, 64))
-    generate_shiny_mon_pics(mon_front_pics, species_to_national, "front", (0, 0, 64, 64), mon_shiny_palettes)
-    generate_shiny_mon_pics(mon_back_pics, species_to_national, "back", (0, 0, 64, 64), mon_shiny_palettes)
-    generate_mon_pics(mon_icon_pics, species_to_national, "icon", (0, 0, 32, 32))
+    # Execute all of the artifact generators to build the static website.
+    artifact_generators = [
+        PokedexGenerator,
+        MonSummariesGenerator,
+        MonPicsGenerator,
+    ]
+    for generator in artifact_generators:
+        g = generator(config, core_data, core_funcs)
+        g.run(env)
