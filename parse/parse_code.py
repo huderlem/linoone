@@ -3,6 +3,8 @@
 #
 # Provides c-file parsing functionality using the pycparser library.
 #--------------------------------------------------------------------
+import os
+
 from pycparser import parse_file
 from pycparser.c_ast import Decl
 
@@ -13,7 +15,7 @@ from pycparser.c_ast import Decl
 ast_cache = {}
 
 
-def parse_ast_from_file(filepath):
+def parse_ast_from_file(filepath, project_path):
     """
     Parses an abstract syntax tree from the given C file.
     """
@@ -25,10 +27,10 @@ def parse_ast_from_file(filepath):
     #       1. In global.h, #define __attribute__(x)
     #       2. In global.h, #define TEST_BUTTON(field, button) ((field) & (button))
     ast = parse_file(filepath, use_cpp=True, cpp_args=[
-        r'-ID:/cygwin64/home/huder/pokeemerald/tools/agbcc/include',
-        r'-ID:/cygwin64/home/huder/pokeemerald/tools/agbcc',
-        r'-ID:/cygwin64/home/huder/pokeemerald/include',
-        r'-ID:/cygwin64/home/huder/pokeemerald/gflib'
+        r'-I%s' % os.path.join(project_path, "tools/agbcc/include"),
+        r'-I%s' % os.path.join(project_path, "tools/agbcc"),
+        r'-I%s' % os.path.join(project_path, "include"),
+        r'-I%s' % os.path.join(project_path, "gflib")
     ])
     ast_cache[filepath] = ast
     return ast
@@ -45,21 +47,21 @@ def get_declaration_from_ast(ast, declaration_name):
                                      'extern' not in item.storage), None)
 
 
-def parse_declaration_from_file(filepath, declaration_name):
+def parse_declaration_from_file(filepath, declaration_name, project_path):
     """
     Parses a C file and finds the specified external declaration
     from the resulting abstract syntax tree. If it doesn't exist, it
     returns None.
     """
-    ast = parse_ast_from_file(filepath)
+    ast = parse_ast_from_file(filepath, project_path)
     return get_declaration_from_ast(ast, declaration_name)
 
 
-def parse_names(filepath, declaration_name):
+def parse_names(filepath, declaration_name, project_path):
     """
     Parses and returns an array of names.
     """
-    ast = parse_ast_from_file(filepath)
+    ast = parse_ast_from_file(filepath, project_path)
     arr = get_declaration_from_ast(ast, declaration_name)
     if arr == None:
         raise Exception("Failed to read %s names from %s" % (declaration_name, filepath))

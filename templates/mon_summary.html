@@ -3,6 +3,99 @@
 {% block title %}{{ mon_species_names[species] }}{% endblock %}
 
 {% block content %}
-<h1>#{{ species_to_national[species] }} - {{ mon_species_names[species] }}</h1>
+<h1>#{{ national_num }} - {{ mon_species_names[species] }}</h1>
+
+<p><em>{{ mon_dex_entries[national_num].description.replace("\\n", " ") }}</em></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Summary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Category</td>
+        <td>{{ mon_dex_entries[national_num].categoryName }}</td>
+    </tr>
+    <tr>
+      <td>Type(s)</td>
+      <td>{{ type_names[mon_base_stats[species].type1] }}{% if mon_base_stats[species].type2 != mon_base_stats[species].type1 %} / {{ type_names[mon_base_stats[species].type2] }}{% endif %}</td>
+    </tr>
+    <tr>
+      <td>Abilities</td>
+      <td >{{ ability_names[mon_base_stats[species].abilities[0]] }}{% if mon_base_stats[species].abilities[1] != "0" %} / {{ ability_names[mon_base_stats[species].abilities[1]] }}{% endif %}</td>
+    </tr>
+    <tr>
+      <td>Catch Rate</td>
+      <td>{{ mon_base_stats[species].catchRate }}</td>
+    </tr>
+    <tr>
+      <td>Exp. Yield</td>
+      <td>{{ mon_base_stats[species].expYield }}</td>
+    </tr>
+    <tr>
+      <td>EV Yield</td>
+      <td>
+        {%if mon_base_stats[species].evYield_HP != "0" %}{{ mon_base_stats[species].evYield_HP }} HP{% endif %}
+        {%if mon_base_stats[species].evYield_Attack != "0" %}{{ mon_base_stats[species].evYield_Attack }} Atk{% endif %}
+        {%if mon_base_stats[species].evYield_Defense != "0" %}{{ mon_base_stats[species].evYield_Defense }} Def{% endif %}
+        {%if mon_base_stats[species].evYield_SpAttack != "0" %}{{ mon_base_stats[species].evYield_SpAttack }} Sp.Atk{% endif %}
+        {%if mon_base_stats[species].evYield_SpDefense != "0" %}{{ mon_base_stats[species].evYield_SpDefense }} Sp.Def{% endif %}
+        {%if mon_base_stats[species].evYield_Speed != "0" %}{{ mon_base_stats[species].evYield_Speed }} Speed{% endif %}
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<table>
+  <thead>
+    <tr>
+      <th>Base Stats</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>HP</td>
+      <td>{{ mon_base_stats[species].baseHP }}</td>
+    </tr>
+    <tr>
+      <td>Attack</td>
+      <td>{{ mon_base_stats[species].baseAttack }}</td>
+    </tr>
+    <tr>
+      <td>Defense</td>
+      <td>{{ mon_base_stats[species].baseDefense }}</td>
+    </tr>
+    <tr>
+      <td>Sp. Attack</td>
+      <td>{{ mon_base_stats[species].baseSpAttack }}</td>
+    </tr>
+    <tr>
+      <td>Sp. Defense</td>
+      <td>{{ mon_base_stats[species].baseSpDefense }}</td>
+    </tr>
+    <tr>
+      <td>Speed</td>
+      <td>{{ mon_base_stats[species].baseSpeed }}</td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<table>
+  <thead>
+    <tr>
+      <th colspan="2">Learnset by Leveling Up</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in mon_learnsets[species] %}
+    <tr>
+      <td>{{ item["level"] }}</td>
+      <td>{{ move_names[item["move"]] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
 {% endblock %}

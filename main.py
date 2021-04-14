@@ -60,7 +60,11 @@ data = {
     "type_names": {
         "func": mons.parse_type_names,
         "cache_file": "type_names.pickle"
-    }
+    },
+    "move_names": {
+        "func": mons.parse_move_names,
+        "cache_file": "move_names.pickle"
+    },
 }
 
 
@@ -103,6 +107,7 @@ if __name__ == "__main__":
     ability_names = load_data("ability_names", config)
     ability_descriptions = load_data("ability_descriptions", config)
     type_names = load_data("type_names", config)
+    move_names = load_data("move_names", config)
     national_dex_numbers = get_sorted_national_dex_numbers(national_to_species)
 
     os.makedirs("dist", exist_ok=True)
@@ -131,10 +136,14 @@ if __name__ == "__main__":
         output = template.render(
             **config,
             species=national_to_species[national_num],
-            species_to_national=species_to_national,
+            national_num=national_num,
             mon_species_names=mon_species_names,
             mon_base_stats=mon_base_stats,
-            type_names=type_names
+            type_names=type_names,
+            mon_dex_entries=mon_dex_entries,
+            ability_names=ability_names,
+            mon_learnsets=mon_learnsets,
+            move_names=move_names
         )
         soup = bs(output, "html.parser")
         prettyHTML = soup.prettify(formatter="html5")
