@@ -169,6 +169,27 @@ def parse_ability_descriptions(config):
     return result
 
 
+def parse_move_descriptions(config):
+    """
+    Parses and returns the project's move descriptions.
+    """
+    filepath = os.path.join(config['project_dir'], "src/pokemon_summary_screen.c")
+    ast = parse_ast_from_file(filepath, config['project_dir'])
+
+    move_descriptions = get_declaration_from_ast(ast, "gMoveDescriptionPointers")
+    if move_descriptions == None:
+        raise Exception("Failed to read move descriptions from %s" % filepath)
+
+    result = {}
+    for item in move_descriptions.init.exprs:
+        move = item.name[0].left.value
+        move_description = get_declaration_from_ast(ast, item.expr.name)
+        description = move_description.init.args.exprs[0].value.strip("\"")
+        result[move] = description
+
+    return result
+
+
 def parse_nature_names(config):
     """
     Parses and returns the project's nature names.

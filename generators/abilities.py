@@ -15,7 +15,6 @@ class AbilitiesGenerator(BaseGenerator):
         that will be exposed to the template.
         """
         ability_mons = create_ability_map(
-            self.core_data["ability_names"],
             self.core_data["mon_base_stats"],
             self.core_data["national_to_species"]
         )
@@ -43,7 +42,7 @@ class AbilitiesGenerator(BaseGenerator):
         self.render_template(env, "abilities.html", "abilities.html")
 
 
-def create_ability_map(ability_names, mon_base_stats, national_to_species):
+def create_ability_map(mon_base_stats, national_to_species):
     """
     Create a convenient ability mapping with all the Pokémon that
     have each ability.

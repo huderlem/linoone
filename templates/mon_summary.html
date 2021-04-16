@@ -138,7 +138,7 @@
     {% for item in mon_learnsets[species] %}
     <tr>
       <td>{{ item["level"] }}</td>
-      <td>{{ move_names[item["move"]] }}</td>
+      <td><a href="{{ make_url('moves/' + item['move'] + '.html') }}">{{ move_names[item['move']] }}</a></td>
     </tr>
     {% endfor %}
   </tbody>

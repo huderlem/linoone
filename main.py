@@ -10,6 +10,7 @@ from generators.mon_summaries import MonSummariesGenerator
 from generators.mon_pics import MonPicsGenerator
 from generators.types import TypesGenerator
 from generators.abilities import AbilitiesGenerator
+from generators.moves import MovesGenerator
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -62,6 +63,10 @@ project_data = {
     "ability_descriptions": {
         "func": mons.parse_ability_descriptions,
         "cache_file": "ability_descriptions.pickle"
+    },
+    "move_descriptions": {
+        "func": mons.parse_move_descriptions,
+        "cache_file": "move_descriptions.pickle"
     },
     "type_names": {
         "func": mons.parse_type_names,
@@ -133,6 +138,7 @@ def load_core_data(config):
     mon_shiny_palettes = load_data("mon_shiny_palettes", config)
     ability_names = load_data("ability_names", config)
     ability_descriptions = load_data("ability_descriptions", config)
+    move_descriptions = load_data("move_descriptions", config)
     type_names = load_data("type_names", config)
     move_names = load_data("move_names", config)
     return {
@@ -149,6 +155,7 @@ def load_core_data(config):
         "mon_shiny_palettes": mon_shiny_palettes,
         "ability_names": ability_names,
         "ability_descriptions": ability_descriptions,
+        "move_descriptions": move_descriptions,
         "type_names": type_names,
         "move_names": move_names,
     }
@@ -197,6 +204,7 @@ if __name__ == "__main__":
         MonPicsGenerator,
         TypesGenerator,
         AbilitiesGenerator,
+        MovesGenerator,
     ]
     for generator in artifact_generators:
         g = generator(config, core_data, core_funcs)
