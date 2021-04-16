@@ -28,7 +28,7 @@ class TypesGenerator(BaseGenerator):
         """
         Generates all of the Pokémon type pages into the distribution directory.
         """
-        for type_id in self.custom_data["types_map"]:
+        for type_id in self.core_data["type_names"]:
             self.render_template(
                 env,
                 "type.html",

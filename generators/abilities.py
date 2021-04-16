@@ -29,7 +29,7 @@ class AbilitiesGenerator(BaseGenerator):
         """
         Generates all of the ability pages into the distribution directory.
         """
-        for ability in self.custom_data["ability_mons"]:
+        for ability in self.core_data["ability_names"]:
             self.render_template(
                 env,
                 "ability.html",

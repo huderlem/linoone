@@ -29,7 +29,7 @@ class MovesGenerator(BaseGenerator):
         """
         Generates all of the move pages into the distribution directory.
         """
-        for move in self.custom_data["levelup_move_mons"]:
+        for move in self.core_data["move_names"]:
             self.render_template(
                 env,
                 "move.html",
