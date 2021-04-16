@@ -14,13 +14,19 @@ class TypesGenerator(BaseGenerator):
         render itself. Returns a dict of variables and/or functions
         that will be exposed to the template.
         """
-        types_map = create_types_map(
+        type_mons_map = create_type_mons_map(
             self.core_data["type_names"],
             self.core_data["mon_base_stats"],
             self.core_data["national_to_species"]
         )
+        type_moves_map = create_type_moves_map(
+            self.core_data["type_names"],
+            self.core_data["moves"],
+            self.core_data["move_names"]
+        )
         return {
-            "types_map": types_map,
+            "type_mons_map": type_mons_map,
+            "type_moves_map": type_moves_map,
         }
 
 
@@ -39,26 +45,45 @@ class TypesGenerator(BaseGenerator):
             )
 
 
-def create_types_map(type_names, mon_base_stats, national_to_species):
+def create_type_mons_map(type_names, mon_base_stats, national_to_species):
     """
     Create a convenient type mapping with all the Pokémon that
     have each typing.
     """
-    types_map = {}
+    type_mons_map = {}
     for national_num in national_to_species:
         species = national_to_species[national_num]
         type1 = mon_base_stats[species]["type1"]
         type2 = mon_base_stats[species]["type2"]
-        if type1 not in types_map:
-            types_map[type1] = []
-        if type2 not in types_map:
-            types_map[type2] = []
+        if type1 not in type_mons_map:
+            type_mons_map[type1] = []
+        if type2 not in type_mons_map:
+            type_mons_map[type2] = []
 
-        types_map[type1].append(national_num)
+        type_mons_map[type1].append(national_num)
         if type1 != type2:
-            types_map[type2].append(national_num)
+            type_mons_map[type2].append(national_num)
 
-    for type_id in types_map:
-        types_map[type_id] = sorted(types_map[type_id], key=int)
+    for type_id in type_mons_map:
+        type_mons_map[type_id] = sorted(type_mons_map[type_id], key=int)
 
-    return types_map
+    return type_mons_map
+
+
+def create_type_moves_map(type_names, moves, move_names):
+    """
+    Create a convenient type mapping with all the moves that
+    have each typing.
+    """
+    type_moves_map = {}
+    for move in moves:
+        move_type = moves[move]["type"]
+        if move_type not in type_moves_map:
+            type_moves_map[move_type] = []
+
+        type_moves_map[move_type].append(move)
+
+    for move in type_moves_map:
+        type_moves_map[move] = sorted(type_moves_map[move], key=lambda m: move_names[m])
+
+    return type_moves_map

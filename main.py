@@ -68,6 +68,10 @@ project_data = {
         "func": mons.parse_move_descriptions,
         "cache_file": "move_descriptions.pickle"
     },
+    "moves": {
+        "func": mons.parse_moves,
+        "cache_file": "moves.pickle"
+    },
     "type_names": {
         "func": mons.parse_type_names,
         "cache_file": "type_names.pickle"
@@ -139,6 +143,7 @@ def load_core_data(config):
     ability_names = load_data("ability_names", config)
     ability_descriptions = load_data("ability_descriptions", config)
     move_descriptions = load_data("move_descriptions", config)
+    moves = load_data("moves", config)
     type_names = load_data("type_names", config)
     move_names = load_data("move_names", config)
     return {
@@ -156,6 +161,7 @@ def load_core_data(config):
         "ability_names": ability_names,
         "ability_descriptions": ability_descriptions,
         "move_descriptions": move_descriptions,
+        "moves": moves,
         "type_names": type_names,
         "move_names": move_names,
     }

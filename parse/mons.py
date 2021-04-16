@@ -332,3 +332,37 @@ def parse_mon_icon_pics(config):
             result[species] = icon_full_filepath
 
     return result
+
+
+def parse_moves(config):
+    """
+    Parses and returns the project's battle moves data.
+    """
+    filepath = os.path.join(config['project_dir'], "src/pokemon.c")
+    ast = parse_ast_from_file(filepath, config['project_dir'])
+
+    battle_moves = get_declaration_from_ast(ast, "gBattleMoves")
+    if battle_moves == None:
+        raise Exception("Failed to read battle moves from %s" % filepath)
+
+    result = {}
+    for item in battle_moves.init.exprs:
+        move = item.name[0].value
+        result[move] = {}
+        for field in item.expr.exprs:
+            typ = type(field)
+            if typ != NamedInitializer:
+                continue
+
+            field_name = field.name[0].name
+            expr = field.expr
+            field_value = None
+            expr_type = type(expr)
+            if expr_type == Constant:
+                field_value = expr.value
+            elif expr_type == ID:
+                field_value = expr.name
+
+            result[move][field_name] = field_value
+
+    return result

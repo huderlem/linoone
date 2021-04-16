@@ -12,7 +12,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for national_num in types_map[type_id] %}
+    {% for national_num in type_mons_map[type_id] %}
     {% set species = national_to_species[national_num] %}
     {% set type1 = mon_base_stats[species].type1 %}
     {% set type2 = mon_base_stats[species].type2 %}
@@ -20,6 +20,21 @@
       <td>#{{ national_num }}</td>
       <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
       <td><a href="{{ make_url('types/' + type1 + '.html') }}">{{ type_names[type1] }}</a>{% if type2 != type1 %} / <a href="{{ make_url('types/' + type2 + '.html') }}">{{ type_names[type2] }}</a>{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<br>
+<table>
+  <thead>
+    <tr>
+      <th colspan="3">{{ type_names[type_id] }} Moves</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for move in type_moves_map[type_id] %}
+    <tr>
+      <td><a href="{{ make_url('moves/' + move + '.html') }}">{{ move_names[move] }}</a></td>
     </tr>
     {% endfor %}
   </tbody>

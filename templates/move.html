@@ -10,6 +10,33 @@
 <table>
   <thead>
     <tr>
+      <th>Move Data</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% set type = moves[move]['type'] %}
+      <td>Type</td>
+      <td><a href="{{ make_url('types/' + type + '.html') }}">{{ type_names[type] }}</a></td>
+    </tr>
+    <tr>
+      <td>Power</td>
+      <td>{{ moves[move]['power'] }}</td>
+    </tr>
+    <tr>
+      <td>Accuracy</td>
+      <td>{{ moves[move]['accuracy'] }}</td>
+    </tr>
+    <tr>
+      <td>PP</td>
+      <td>{{ moves[move]['pp'] }}</td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<table>
+  <thead>
+    <tr>
       <th colspan="3">Pokémon that learn {{ move_names[move] }} by Leveling Up</th>
     </tr>
   </thead>
