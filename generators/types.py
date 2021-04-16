@@ -1,5 +1,5 @@
 #--------------------------------------------------------------------
-# linoone: type_mons.py
+# linoone: types.py
 #
 # Page generator for the Pokémon type pages. Each page lists the
 # Pokémon that have each typing.
@@ -7,7 +7,7 @@
 from generators.base_generator import BaseGenerator
 
 
-class TypeMonsGenerator(BaseGenerator):
+class TypesGenerator(BaseGenerator):
     def prepare_template_data(self):
         """
         Prepares any additional data the page generator needs to
@@ -26,12 +26,12 @@ class TypeMonsGenerator(BaseGenerator):
 
     def generate(self, env):
         """
-        Generates all of the Pokémon summary pages into the distribution directory.
+        Generates all of the Pokémon type pages into the distribution directory.
         """
         for type_id in self.custom_data["types_map"]:
             self.render_template(
                 env,
-                "type_mons.html",
+                "type.html",
                 "types/%s.html" % type_id,
                 extra_data={
                     'type_id': type_id,

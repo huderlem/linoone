@@ -32,7 +32,9 @@
     </tr>
     <tr>
       <td>Abilities</td>
-      <td >{{ ability_names[mon_base_stats[species].abilities[0]] }}{% if mon_base_stats[species].abilities[1] != "0" %} / {{ ability_names[mon_base_stats[species].abilities[1]] }}{% endif %}</td>
+      {% set ability1 = mon_base_stats[species].abilities[0] %}
+      {% set ability2 = mon_base_stats[species].abilities[1] %}
+      <td ><a href="{{ make_url('abilities/' + ability1 + '.html') }}">{{ ability_names[ability1] }}</a>{% if ability2 != "0" %} / <a href="{{ make_url('abilities/' + ability2 + '.html') }}">{{ ability_names[ability2] }}</a>{% endif %}</td>
     </tr>
     <tr>
       <td>Catch Rate</td>

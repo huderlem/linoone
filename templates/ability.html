@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}{{ ability_names[ability] }}{% endblock %}
+
+{% block content %}
+<h1>Ability - {{ ability_names[ability] }}</h1>
+
+<p><em>{{ ability_descriptions[ability] }}</em></p>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3">Pokémon with {{ ability_names[ability] }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for national_num in ability_mons[ability] %}
+    {% set species = national_to_species[national_num] %}
+    {% set ability1 = mon_base_stats[species].abilities[0] %}
+    {% set ability2 = mon_base_stats[species].abilities[1] %}
+    <tr>
+      <td>#{{ national_num }}</td>
+      <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
+      <td><a href="{{ make_url('abilities/' + ability1 + '.html') }}">{{ ability_names[ability1] }}</a>{% if ability2 != '0' %} / <a href="{{ make_url('abilities/' + ability2 + '.html') }}">{{ ability_names[ability2] }}</a>{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
