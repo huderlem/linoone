@@ -26,7 +26,9 @@
     </tr>
     <tr>
       <td>Type(s)</td>
-      <td>{{ type_names[mon_base_stats[species].type1] }}{% if mon_base_stats[species].type2 != mon_base_stats[species].type1 %} / {{ type_names[mon_base_stats[species].type2] }}{% endif %}</td>
+      {% set type1 = mon_base_stats[species].type1 %}
+      {% set type2 = mon_base_stats[species].type2 %}
+      <td><a href="{{ make_url('types/' + type1 + '.html') }}">{{ type_names[type1] }}</a>{% if type2 != type1 %} / <a href="{{ make_url('types/' + type2 + '.html') }}">{{ type_names[type2] }}</a>{% endif %}</td>
     </tr>
     <tr>
       <td>Abilities</td>

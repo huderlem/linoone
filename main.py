@@ -8,6 +8,7 @@ import parse.mons as mons
 from generators.pokedex import PokedexGenerator
 from generators.mon_summaries import MonSummariesGenerator
 from generators.mon_pics import MonPicsGenerator
+from generators.type_mons import TypeMonsGenerator
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -193,6 +194,7 @@ if __name__ == "__main__":
         PokedexGenerator,
         MonSummariesGenerator,
         MonPicsGenerator,
+        TypeMonsGenerator,
     ]
     for generator in artifact_generators:
         g = generator(config, core_data, core_funcs)
