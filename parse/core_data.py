@@ -178,6 +178,34 @@ def parse_tmhm_mapping(config):
     return item_to_move, move_to_item
 
 
+def parse_egg_moves(config):
+    """
+    Parses and returns the project's egg moves.
+    """
+    filepath = os.path.join(config['project_dir'], "src/daycare.c")
+    ast = parse_ast_from_file(filepath, config['project_dir'])
+
+    egg_moves = get_declaration_from_ast(ast, "gEggMoves")
+    if egg_moves == None:
+        raise Exception("Failed to read mon tm/hm learnsets from %s" % filepath)
+
+    result = {}
+    cur_species = None
+    for item in egg_moves.init.exprs:
+        if type(item) == BinaryOp:
+            cur_species = item.left.value
+            result[cur_species] = []
+        else:
+            move = item.value
+            if move != '0xFFFF':
+                result[cur_species].append(move)
+
+    for species in result:
+        result[species] = sorted(result[species], key=int)
+
+    return result
+
+
 def parse_species_names(config):
     """
     Parses and returns the project's mon species names.

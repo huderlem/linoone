@@ -161,5 +161,21 @@
   </tbody>
 </table>
 <br>
+{% if species in mon_egg_moves %}
+<table>
+  <thead>
+    <tr>
+      <th colspan="2">Egg Moves</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for move in mon_egg_moves[species] %}
+    <tr>
+      <td><a href="{{ make_url('moves/' + move + '.html') }}">{{ move_names[move] }}</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
 
 {% endblock %}
