@@ -143,5 +143,23 @@
     {% endfor %}
   </tbody>
 </table>
+<br>
+<table>
+  <thead>
+    <tr>
+      <th colspan="2">Learnset by TM/HM</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in mon_tmhm_learnsets[species] %}
+    {% set move = item_to_move[item] %}
+    <tr>
+      <td>{{ items[item]['name'] }}</td>
+      <td><a href="{{ make_url('moves/' + move + '.html') }}">{{ move_names[move] }}</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<br>
 
 {% endblock %}

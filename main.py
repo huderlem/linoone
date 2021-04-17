@@ -28,6 +28,10 @@ project_data = {
         "func": parse.core_data.parse_levelup_learnsets,
         "cache_file": "mon_learnsets.pickle"
     },
+    "mon_tmhm_learnsets": {
+        "func": parse.core_data.parse_tmhm_learnsets,
+        "cache_file": "mon_tmhm_learnsets.pickle"
+    },
     "mon_species_names": {
         "func": parse.core_data.parse_species_names,
         "cache_file": "mon_species_names.pickle"
@@ -39,6 +43,10 @@ project_data = {
     "species_maps": {
         "func": parse.core_data.parse_species_mapping,
         "cache_file": "species_maps.pickle"
+    },
+    "tmhm_maps": {
+        "func": parse.core_data.parse_tmhm_mapping,
+        "cache_file": "tmhm_maps.pickle"
     },
     "mon_front_pics": {
         "func": parse.core_data.parse_mon_front_pics,
@@ -79,6 +87,10 @@ project_data = {
     "move_names": {
         "func": parse.core_data.parse_move_names,
         "cache_file": "move_names.pickle"
+    },
+    "items": {
+        "func": parse.core_data.parse_items,
+        "cache_file": "items.pickle"
     },
 }
 
@@ -133,9 +145,11 @@ def load_core_data(config):
     mon_base_stats = load_data("mon_base_stats", config)
     mon_dex_entries = load_data("mon_dex_entries", config)
     mon_learnsets = load_data("mon_learnsets", config)
+    mon_tmhm_learnsets = load_data("mon_tmhm_learnsets", config)
     mon_species_names = load_data("mon_species_names", config)
     mon_evolutions = load_data("mon_evolutions", config)
     species_to_national, national_to_species = load_data("species_maps", config)
+    item_to_move, move_to_item = load_data("tmhm_maps", config)
     mon_front_pics = load_data("mon_front_pics", config)
     mon_back_pics = load_data("mon_back_pics", config)
     mon_icon_pics = load_data("mon_icon_pics", config)
@@ -146,14 +160,18 @@ def load_core_data(config):
     moves = load_data("moves", config)
     type_names = load_data("type_names", config)
     move_names = load_data("move_names", config)
+    items = load_data("items", config)
     return {
         "mon_base_stats": mon_base_stats,
         "mon_dex_entries": mon_dex_entries,
         "mon_learnsets": mon_learnsets,
+        "mon_tmhm_learnsets": mon_tmhm_learnsets,
         "mon_species_names": mon_species_names,
         "mon_evolutions": mon_evolutions,
         "species_to_national": species_to_national,
         "national_to_species": national_to_species,
+        "item_to_move": item_to_move,
+        "move_to_item": move_to_item,
         "mon_front_pics": mon_front_pics,
         "mon_back_pics": mon_back_pics,
         "mon_icon_pics": mon_icon_pics,
@@ -164,6 +182,7 @@ def load_core_data(config):
         "moves": moves,
         "type_names": type_names,
         "move_names": move_names,
+        "items": items,
     }
 
 

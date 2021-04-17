@@ -4,7 +4,7 @@
 # Handles parsing and gathering core data from the project sources.
 #--------------------------------------------------------------------
 import os
-from pycparser.c_ast import Constant, FuncCall, ID, InitList, NamedInitializer
+from pycparser.c_ast import BinaryOp, Cast, Constant, FuncCall, ID, InitList, NamedInitializer
 from parse.parse_code import parse_declaration_from_file, parse_ast_from_file, get_declaration_from_ast, parse_names
 
 
@@ -116,6 +116,68 @@ def parse_levelup_learnsets(config):
     return result
 
 
+def parse_tmhm_learnsets(config):
+    """
+    Parses and returns the project's mon TM/HM move learnsets.
+    """
+    filepath = os.path.join(config['project_dir'], "src/pokemon.c")
+    ast = parse_ast_from_file(filepath, config['project_dir'])
+
+    tmhm_pointers = get_declaration_from_ast(ast, "gTMHMLearnsets")
+    if tmhm_pointers == None:
+        raise Exception("Failed to read mon tm/hm learnsets from %s" % filepath)
+
+    result = {}
+    for item in tmhm_pointers.init.exprs:
+        species = item.name[0].value
+        tmhm_learnset = get_tmhms_from_expr(item.expr.exprs[0].expr, [])
+        result[species] = sorted(tmhm_learnset, key=int)
+
+    return result
+
+
+def get_tmhms_from_expr(expr, tmhm_learnset):
+    """
+    Recursively parses out the list of TMHMs from the expression.
+    """
+    if type(expr) != BinaryOp:
+        return tmhm_learnset
+
+    # This is the base case leaf node.
+    if type(expr.left) == Cast:
+        tmhm = expr.right.left.value
+        tmhm_learnset.append(tmhm)
+        return tmhm_learnset
+
+    tmhm_learnset = get_tmhms_from_expr(expr.left, tmhm_learnset)
+    tmhm = expr.right.right.left.value
+    tmhm_learnset.append(tmhm)
+    return tmhm_learnset
+
+
+def parse_tmhm_mapping(config):
+    """
+    Parses and returns the project's item-to-move numbers mapping.
+    Returns the reverse mapping, too.
+    """
+    filepath = os.path.join(config['project_dir'], "src/party_menu.c")
+    ast = parse_ast_from_file(filepath, config['project_dir'])
+
+    tmhm_moves = get_declaration_from_ast(ast, "sTMHMMoves")
+    if tmhm_moves == None:
+        raise Exception("Failed to read mon tm/hm moves from %s" % filepath)
+
+    item_to_move = {}
+    move_to_item = {}
+    for item in tmhm_moves.init.exprs:
+        tmhm_item = item.name[0].left.value
+        move = item.expr.value
+        item_to_move[tmhm_item] = move
+        move_to_item[move] = tmhm_item
+
+    return item_to_move, move_to_item
+
+
 def parse_species_names(config):
     """
     Parses and returns the project's mon species names.
@@ -146,6 +208,41 @@ def parse_move_names(config):
     """
     filepath = os.path.join(config['project_dir'], "src/data.c")
     return parse_names(filepath, "gMoveNames", config['project_dir'])
+
+
+def parse_items(config):
+    """
+    Parses and returns the project's items.
+    """
+    filepath = os.path.join(config['project_dir'], "src/item.c")
+    items = parse_declaration_from_file(filepath, "gItems", config['project_dir'])
+    if items == None:
+        raise Exception("Failed to read mon base stats from %s" % filepath)
+
+    result = {}
+    for item in items.init.exprs:
+        item_id = item.name[0].value
+        result[item_id] = {}
+        for field in item.expr.exprs:
+            typ = type(field)
+            if typ != NamedInitializer:
+                continue
+
+            field_name = field.name[0].name
+            expr = field.expr
+            field_value = None
+            expr_type = type(expr)
+            if expr_type == Constant:
+                field_value = expr.value
+            elif expr_type == ID:
+                field_value = expr.name
+            elif expr_type == FuncCall:
+                if expr.name.name == "_":
+                    field_value = expr.args.exprs[0].value.strip("\"")
+
+            result[item_id][field_name] = field_value
+
+    return result
 
 
 def parse_ability_descriptions(config):

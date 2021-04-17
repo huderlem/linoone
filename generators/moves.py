@@ -18,9 +18,15 @@ class MovesGenerator(BaseGenerator):
             self.core_data["mon_learnsets"],
             self.core_data["national_to_species"]
         )
+        tmhm_move_mons = create_tmhm_move_map(
+            self.core_data["mon_tmhm_learnsets"],
+            self.core_data["item_to_move"],
+            self.core_data["national_to_species"]
+        )
         sorted_moves = get_sorted_moves(self.core_data["move_names"])
         return {
             "levelup_move_mons": levelup_move_mons,
+            "tmhm_move_mons": tmhm_move_mons,
             "sorted_moves": sorted_moves,
         }
 
@@ -60,6 +66,27 @@ def create_levelup_move_map(mon_learnsets, national_to_species):
 
     for move in result:
         result[move] = sorted(result[move], key=lambda item: int(item["national_num"]))
+
+    return result
+
+
+def create_tmhm_move_map(mon_tmhm_learnsets, item_to_move, national_to_species):
+    """
+    Create a convenient move mapping with all the Pokémon that
+    have learn each move by tm/hm.
+    """
+    result = {}
+    for national_num in national_to_species:
+        species = national_to_species[national_num]
+        for item_id in mon_tmhm_learnsets[species]:
+            move = item_to_move[item_id]
+            if move not in result:
+                result[move] = []
+
+            result[move].append(national_num)
+
+    for move in result:
+        result[move] = sorted(result[move], key=int)
 
     return result
 
