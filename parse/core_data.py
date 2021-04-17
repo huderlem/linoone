@@ -1,7 +1,7 @@
 #--------------------------------------------------------------------
-# linoone: mons.py
+# linoone: core_data.py
 #
-# Handles parsing and gathering mon data.
+# Handles parsing and gathering core data from the project sources.
 #--------------------------------------------------------------------
 import os
 from pycparser.c_ast import Constant, FuncCall, ID, InitList, NamedInitializer

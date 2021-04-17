@@ -4,7 +4,7 @@ import pickle
 import re
 import urllib.parse
 
-import parse.mons as mons
+import parse.core_data
 from generators.pokedex import PokedexGenerator
 from generators.mon_summaries import MonSummariesGenerator
 from generators.mon_pics import MonPicsGenerator
@@ -17,67 +17,67 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 project_data = {
     "mon_base_stats": {
-        "func": mons.parse_base_stats,
+        "func": parse.core_data.parse_base_stats,
         "cache_file": "mon_base_stats.pickle"
     },
     "mon_dex_entries": {
-        "func": mons.parse_dex_entries,
+        "func": parse.core_data.parse_dex_entries,
         "cache_file": "mon_dex_entries.pickle"
     },
     "mon_learnsets": {
-        "func": mons.parse_levelup_learnsets,
+        "func": parse.core_data.parse_levelup_learnsets,
         "cache_file": "mon_learnsets.pickle"
     },
     "mon_species_names": {
-        "func": mons.parse_species_names,
+        "func": parse.core_data.parse_species_names,
         "cache_file": "mon_species_names.pickle"
     },
     "mon_evolutions": {
-        "func": mons.parse_evolutions,
+        "func": parse.core_data.parse_evolutions,
         "cache_file": "mon_evolutions.pickle"
     },
     "species_maps": {
-        "func": mons.parse_species_mapping,
+        "func": parse.core_data.parse_species_mapping,
         "cache_file": "species_maps.pickle"
     },
     "mon_front_pics": {
-        "func": mons.parse_mon_front_pics,
+        "func": parse.core_data.parse_mon_front_pics,
         "cache_file": "mon_front_pics.pickle"
     },
     "mon_back_pics": {
-        "func": mons.parse_mon_back_pics,
+        "func": parse.core_data.parse_mon_back_pics,
         "cache_file": "mon_back_pics.pickle"
     },
     "mon_icon_pics": {
-        "func": mons.parse_mon_icon_pics,
+        "func": parse.core_data.parse_mon_icon_pics,
         "cache_file": "mon_icon_pics.pickle"
     },
     "mon_shiny_palettes": {
-        "func": mons.parse_mon_shiny_palettes,
+        "func": parse.core_data.parse_mon_shiny_palettes,
         "cache_file": "mon_shiny_palettes.pickle"
     },
     "ability_names": {
-        "func": mons.parse_ability_names,
+        "func": parse.core_data.parse_ability_names,
         "cache_file": "ability_names.pickle"
     },
     "ability_descriptions": {
-        "func": mons.parse_ability_descriptions,
+        "func": parse.core_data.parse_ability_descriptions,
         "cache_file": "ability_descriptions.pickle"
     },
     "move_descriptions": {
-        "func": mons.parse_move_descriptions,
+        "func": parse.core_data.parse_move_descriptions,
         "cache_file": "move_descriptions.pickle"
     },
     "moves": {
-        "func": mons.parse_moves,
+        "func": parse.core_data.parse_moves,
         "cache_file": "moves.pickle"
     },
     "type_names": {
-        "func": mons.parse_type_names,
+        "func": parse.core_data.parse_type_names,
         "cache_file": "type_names.pickle"
     },
     "move_names": {
-        "func": mons.parse_move_names,
+        "func": parse.core_data.parse_move_names,
         "cache_file": "move_names.pickle"
     },
 }
