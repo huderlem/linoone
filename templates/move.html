@@ -6,6 +6,9 @@
 <h1>Move - {{ move_names[move] }}</h1>
 
 <p><em>{{ move_descriptions.get(move, '').replace("\\n", " ") }}</em></p>
+{% if move in move_to_item %}
+<p>{{ move_names[move] }} is {{ items[move_to_item[move]]['name'] }}.</p>
+{% endif %}
 
 <table>
   <thead>
