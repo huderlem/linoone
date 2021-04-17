@@ -27,11 +27,16 @@ class MovesGenerator(BaseGenerator):
             self.core_data["mon_egg_moves"],
             self.core_data["national_to_species"]
         )
+        tutor_move_mons = create_tutor_move_map(
+            self.core_data["mon_tutor_moves"],
+            self.core_data["national_to_species"]
+        )
         sorted_moves = get_sorted_moves(self.core_data["move_names"])
         return {
             "levelup_move_mons": levelup_move_mons,
             "tmhm_move_mons": tmhm_move_mons,
             "egg_move_mons": egg_move_mons,
+            "tutor_move_mons": tutor_move_mons,
             "sorted_moves": sorted_moves,
         }
 
@@ -108,6 +113,29 @@ def create_egg_move_map(mon_egg_moves, national_to_species):
             continue
 
         for move in mon_egg_moves[species]:
+            if move not in result:
+                result[move] = []
+
+            result[move].append(national_num)
+
+    for move in result:
+        result[move] = sorted(result[move], key=int)
+
+    return result
+
+
+def create_tutor_move_map(mon_tutor_moves, national_to_species):
+    """
+    Create a convenient move mapping with all the Pokémon that
+    learn each move as an tutored move.
+    """
+    result = {}
+    for national_num in national_to_species:
+        species = national_to_species[national_num]
+        if species not in mon_tutor_moves:
+            continue
+
+        for move in mon_tutor_moves[species]:
             if move not in result:
                 result[move] = []
 

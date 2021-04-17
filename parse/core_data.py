@@ -187,7 +187,7 @@ def parse_egg_moves(config):
 
     egg_moves = get_declaration_from_ast(ast, "gEggMoves")
     if egg_moves == None:
-        raise Exception("Failed to read mon tm/hm learnsets from %s" % filepath)
+        raise Exception("Failed to read mon egg moves from %s" % filepath)
 
     result = {}
     cur_species = None
@@ -204,6 +204,55 @@ def parse_egg_moves(config):
         result[species] = sorted(result[species], key=int)
 
     return result
+
+
+def parse_tutor_moves(config):
+    """
+    Parses and returns the project's move tutor moves.
+    """
+    filepath = os.path.join(config['project_dir'], "src/party_menu.c")
+    ast = parse_ast_from_file(filepath, config['project_dir'])
+
+    tutor_move_defs = get_declaration_from_ast(ast, "gTutorMoves")
+    if tutor_move_defs == None:
+        raise Exception("Failed to read mon tutor move definitions from %s" % filepath)
+
+    tutor_moves = get_declaration_from_ast(ast, "sTutorLearnsets")
+    if tutor_moves == None:
+        raise Exception("Failed to read mon tutor moves from %s" % filepath)
+
+    tutor_move_map = {}
+    for item in tutor_move_defs.init.exprs:
+        tutor_move_id = item.name[0].value
+        move = item.expr.value
+        tutor_move_map[tutor_move_id] = move
+
+    result = {}
+    for item in tutor_moves.init.exprs:
+        species = item.name[0].value
+        tutor_moves = get_tutor_moves_from_expr(item.expr, tutor_move_map, [])
+        result[species] = sorted(tutor_moves, key=int)
+
+    return result
+
+
+def get_tutor_moves_from_expr(expr, tutor_move_map, tutor_moves):
+    """
+    Recursively parses out the list of tutor moves from the expression.
+    """
+    if type(expr) != BinaryOp:
+        return tutor_moves
+
+    # This is the base case leaf node.
+    if type(expr.left) == Constant:
+        tutor_move_id = expr.right.value
+        tutor_moves.append(tutor_move_map[tutor_move_id])
+        return tutor_moves
+
+    tutor_moves = get_tutor_moves_from_expr(expr.left, tutor_move_map, tutor_moves)
+    tutor_move_id = expr.right.right.value
+    tutor_moves.append(tutor_move_map[tutor_move_id])
+    return tutor_moves
 
 
 def parse_species_names(config):

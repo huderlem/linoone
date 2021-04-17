@@ -160,8 +160,9 @@
     {% endfor %}
   </tbody>
 </table>
-<br>
+
 {% if species in mon_egg_moves %}
+<br>
 <table>
   <thead>
     <tr>
@@ -170,6 +171,24 @@
   </thead>
   <tbody>
     {% for move in mon_egg_moves[species] %}
+    <tr>
+      <td><a href="{{ make_url('moves/' + move + '.html') }}">{{ move_names[move] }}</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% if species in mon_tutor_moves %}
+<br>
+<table>
+  <thead>
+    <tr>
+      <th colspan="2">Learnset by Move Tutor</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for move in mon_tutor_moves[species] %}
     <tr>
       <td><a href="{{ make_url('moves/' + move + '.html') }}">{{ move_names[move] }}</a></td>
     </tr>

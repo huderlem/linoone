@@ -37,6 +37,10 @@ project_data = {
         "func": parse.core_data.parse_egg_moves,
         "cache_file": "mon_egg_moves.pickle"
     },
+    "mon_tutor_moves": {
+        "func": parse.core_data.parse_tutor_moves,
+        "cache_file": "mon_tutor_moves.pickle"
+    },
     "mon_species_names": {
         "func": parse.core_data.parse_species_names,
         "cache_file": "mon_species_names.pickle"
@@ -152,6 +156,7 @@ def load_core_data(config):
     mon_learnsets = load_data("mon_learnsets", config)
     mon_tmhm_learnsets = load_data("mon_tmhm_learnsets", config)
     mon_egg_moves = load_data("mon_egg_moves", config)
+    mon_tutor_moves = load_data("mon_tutor_moves", config)
     mon_species_names = load_data("mon_species_names", config)
     mon_evolutions = load_data("mon_evolutions", config)
     species_to_national, national_to_species = load_data("species_maps", config)
@@ -173,6 +178,7 @@ def load_core_data(config):
         "mon_learnsets": mon_learnsets,
         "mon_tmhm_learnsets": mon_tmhm_learnsets,
         "mon_egg_moves": mon_egg_moves,
+        "mon_tutor_moves": mon_tutor_moves,
         "mon_species_names": mon_species_names,
         "mon_evolutions": mon_evolutions,
         "species_to_national": species_to_national,
