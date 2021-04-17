@@ -5,6 +5,7 @@ import re
 import urllib.parse
 
 import parse.core_data
+from generators.index import IndexGenerator
 from generators.pokedex import PokedexGenerator
 from generators.mon_summaries import MonSummariesGenerator
 from generators.mon_pics import MonPicsGenerator
@@ -224,6 +225,7 @@ if __name__ == "__main__":
 
     # Execute all of the artifact generators to build the static website.
     artifact_generators = [
+        IndexGenerator,
         PokedexGenerator,
         MonSummariesGenerator,
         MonPicsGenerator,

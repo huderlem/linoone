@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}{{ mon_species_names[species] }}{% endblock %}
+
+{% block content %}
+
+<h2>Contents</h2>
+<ul>
+  <li><a href="{{ make_url('pokedex.html') }}">Pokédex</a></li>
+  <li><a href="{{ make_url('moves.html') }}">Battle Moves</a></li>
+  <li><a href="{{ make_url('abilities.html') }}">Abilities</a></li>
+</ul>
+
+{% endblock %}
