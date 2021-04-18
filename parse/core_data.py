@@ -3,7 +3,11 @@
 #
 # Handles parsing and gathering core data from the project sources.
 #--------------------------------------------------------------------
+import glob
+import json
 import os
+import re
+
 from pycparser.c_ast import BinaryOp, Cast, Constant, FuncCall, ID, InitList, NamedInitializer
 from parse.parse_code import parse_declaration_from_file, parse_ast_from_file, get_declaration_from_ast, parse_names
 
@@ -12,8 +16,8 @@ def parse_base_stats(config):
     """
     Parses and returns the project's mon base stats.
     """
-    filepath = os.path.join(config['project_dir'], "src/pokemon.c")
-    base_stats = parse_declaration_from_file(filepath, "gBaseStats", config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/pokemon.c")
+    base_stats = parse_declaration_from_file(filepath, "gBaseStats", config["project_dir"])
     if base_stats == None:
         raise Exception("Failed to read mon base stats from %s" % filepath)
 
@@ -48,8 +52,8 @@ def parse_dex_entries(config):
     Parses and returns the project's mon pokedex entries.
     It also includes the pokedex text blurb.
     """
-    filepath = os.path.join(config['project_dir'], "src/pokedex.c")
-    ast = parse_ast_from_file(filepath, config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/pokedex.c")
+    ast = parse_ast_from_file(filepath, config["project_dir"])
 
     dex_entries = get_declaration_from_ast(ast, "gPokedexEntries")
     if dex_entries == None:
@@ -91,8 +95,8 @@ def parse_levelup_learnsets(config):
     """
     Parses and returns the project's mon level-up move learnsets.
     """
-    filepath = os.path.join(config['project_dir'], "src/pokemon.c")
-    ast = parse_ast_from_file(filepath, config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/pokemon.c")
+    ast = parse_ast_from_file(filepath, config["project_dir"])
 
     learnset_pointers = get_declaration_from_ast(ast, "gLevelUpLearnsets")
     if learnset_pointers == None:
@@ -120,8 +124,8 @@ def parse_tmhm_learnsets(config):
     """
     Parses and returns the project's mon TM/HM move learnsets.
     """
-    filepath = os.path.join(config['project_dir'], "src/pokemon.c")
-    ast = parse_ast_from_file(filepath, config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/pokemon.c")
+    ast = parse_ast_from_file(filepath, config["project_dir"])
 
     tmhm_pointers = get_declaration_from_ast(ast, "gTMHMLearnsets")
     if tmhm_pointers == None:
@@ -160,8 +164,8 @@ def parse_tmhm_mapping(config):
     Parses and returns the project's item-to-move numbers mapping.
     Returns the reverse mapping, too.
     """
-    filepath = os.path.join(config['project_dir'], "src/party_menu.c")
-    ast = parse_ast_from_file(filepath, config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/party_menu.c")
+    ast = parse_ast_from_file(filepath, config["project_dir"])
 
     tmhm_moves = get_declaration_from_ast(ast, "sTMHMMoves")
     if tmhm_moves == None:
@@ -182,8 +186,8 @@ def parse_egg_moves(config):
     """
     Parses and returns the project's egg moves.
     """
-    filepath = os.path.join(config['project_dir'], "src/daycare.c")
-    ast = parse_ast_from_file(filepath, config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/daycare.c")
+    ast = parse_ast_from_file(filepath, config["project_dir"])
 
     egg_moves = get_declaration_from_ast(ast, "gEggMoves")
     if egg_moves == None:
@@ -210,8 +214,8 @@ def parse_tutor_moves(config):
     """
     Parses and returns the project's move tutor moves.
     """
-    filepath = os.path.join(config['project_dir'], "src/party_menu.c")
-    ast = parse_ast_from_file(filepath, config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/party_menu.c")
+    ast = parse_ast_from_file(filepath, config["project_dir"])
 
     tutor_move_defs = get_declaration_from_ast(ast, "gTutorMoves")
     if tutor_move_defs == None:
@@ -259,40 +263,40 @@ def parse_species_names(config):
     """
     Parses and returns the project's mon species names.
     """
-    filepath = os.path.join(config['project_dir'], "src/data.c")
-    return parse_names(filepath, "gSpeciesNames", config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/data.c")
+    return parse_names(filepath, "gSpeciesNames", config["project_dir"])
 
 
 def parse_type_names(config):
     """
     Parses and returns the project's mon type names.
     """
-    filepath = os.path.join(config['project_dir'], "src/battle_main.c")
-    return parse_names(filepath, "gTypeNames", config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/battle_main.c")
+    return parse_names(filepath, "gTypeNames", config["project_dir"])
 
 
 def parse_ability_names(config):
     """
     Parses and returns the project's mon ability names.
     """
-    filepath = os.path.join(config['project_dir'], "src/battle_main.c")
-    return parse_names(filepath, "gAbilityNames", config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/battle_main.c")
+    return parse_names(filepath, "gAbilityNames", config["project_dir"])
 
 
 def parse_move_names(config):
     """
     Parses and returns the project's move names.
     """
-    filepath = os.path.join(config['project_dir'], "src/data.c")
-    return parse_names(filepath, "gMoveNames", config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/data.c")
+    return parse_names(filepath, "gMoveNames", config["project_dir"])
 
 
 def parse_items(config):
     """
     Parses and returns the project's items.
     """
-    filepath = os.path.join(config['project_dir'], "src/item.c")
-    items = parse_declaration_from_file(filepath, "gItems", config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/item.c")
+    items = parse_declaration_from_file(filepath, "gItems", config["project_dir"])
     if items == None:
         raise Exception("Failed to read mon base stats from %s" % filepath)
 
@@ -326,8 +330,8 @@ def parse_ability_descriptions(config):
     """
     Parses and returns the project's ability descriptions.
     """
-    filepath = os.path.join(config['project_dir'], "src/battle_main.c")
-    ast = parse_ast_from_file(filepath, config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/battle_main.c")
+    ast = parse_ast_from_file(filepath, config["project_dir"])
 
     ability_descriptions = get_declaration_from_ast(ast, "gAbilityDescriptionPointers")
     if ability_descriptions == None:
@@ -347,8 +351,8 @@ def parse_move_descriptions(config):
     """
     Parses and returns the project's move descriptions.
     """
-    filepath = os.path.join(config['project_dir'], "src/pokemon_summary_screen.c")
-    ast = parse_ast_from_file(filepath, config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/pokemon_summary_screen.c")
+    ast = parse_ast_from_file(filepath, config["project_dir"])
 
     move_descriptions = get_declaration_from_ast(ast, "gMoveDescriptionPointers")
     if move_descriptions == None:
@@ -368,8 +372,8 @@ def parse_nature_names(config):
     """
     Parses and returns the project's nature names.
     """
-    filepath = os.path.join(config['project_dir'], "src/pokemon_summary_screen.c")
-    ast = parse_ast_from_file(filepath, config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/pokemon_summary_screen.c")
+    ast = parse_ast_from_file(filepath, config["project_dir"])
 
     nature_names = get_declaration_from_ast(ast, "gNatureNamePointers")
     if nature_names == None:
@@ -389,8 +393,8 @@ def parse_evolutions(config):
     """
     Parses and returns the project's mon evolution definitions.
     """
-    filepath = os.path.join(config['project_dir'], "src/pokemon.c")
-    ast = parse_ast_from_file(filepath, config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/pokemon.c")
+    ast = parse_ast_from_file(filepath, config["project_dir"])
 
     evolutions = get_declaration_from_ast(ast, "gEvolutionTable")
     if evolutions == None:
@@ -414,8 +418,8 @@ def parse_species_mapping(config):
     Parses and returns the project's species-to-national-dex numbers mapping.
     Returns the reverse mapping, too.
     """
-    filepath = os.path.join(config['project_dir'], "src/pokemon.c")
-    ast = parse_ast_from_file(filepath, config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/pokemon.c")
+    ast = parse_ast_from_file(filepath, config["project_dir"])
 
     mappings = get_declaration_from_ast(ast, "gSpeciesToNationalPokedexNum")
     if mappings == None:
@@ -437,15 +441,15 @@ def parse_mon_gfx(config, pic_table_name, pic_table_file, pic_def_file):
     """
     Parses and returns the project's mon specified gfx data.
     """
-    filepath = os.path.join(config['project_dir'], pic_table_file)
-    ast = parse_ast_from_file(filepath, config['project_dir'])
+    filepath = os.path.join(config["project_dir"], pic_table_file)
+    ast = parse_ast_from_file(filepath, config["project_dir"])
 
     pics = get_declaration_from_ast(ast, pic_table_name)
     if pics == None:
         raise Exception("Failed to read mon pics from %s" % filepath)
 
-    pics_filepath = os.path.join(config['project_dir'], pic_def_file)
-    pics_ast = parse_ast_from_file(pics_filepath, config['project_dir'])
+    pics_filepath = os.path.join(config["project_dir"], pic_def_file)
+    pics_ast = parse_ast_from_file(pics_filepath, config["project_dir"])
 
     result = {}
     for item in pics.init.exprs:
@@ -454,7 +458,7 @@ def parse_mon_gfx(config, pic_table_name, pic_table_file, pic_def_file):
             pic_label = item.expr.exprs[0].name
             pic_decl = get_declaration_from_ast(pics_ast, pic_label)
             pic_filepath = pic_decl.init.args.exprs[0].value.strip("\"")
-            pic_full_filepath = os.path.join(config['project_dir'], pic_filepath)
+            pic_full_filepath = os.path.join(config["project_dir"], pic_filepath)
             result[species] = pic_full_filepath
 
     return result
@@ -485,15 +489,15 @@ def parse_mon_icon_pics(config):
     """
     Parses and returns the project's mon icon pics.
     """
-    filepath = os.path.join(config['project_dir'], "src/pokemon_icon.c")
-    ast = parse_ast_from_file(filepath, config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/pokemon_icon.c")
+    ast = parse_ast_from_file(filepath, config["project_dir"])
 
     icon_pics = get_declaration_from_ast(ast, "gMonIconTable")
     if icon_pics == None:
         raise Exception("Failed to read mon icons pics from %s" % filepath)
 
-    gfx_filepath = os.path.join(config['project_dir'], "src/graphics.c")
-    gfx_ast = parse_ast_from_file(gfx_filepath, config['project_dir'])
+    gfx_filepath = os.path.join(config["project_dir"], "src/graphics.c")
+    gfx_ast = parse_ast_from_file(gfx_filepath, config["project_dir"])
 
     result = {}
     for item in icon_pics.init.exprs:
@@ -502,7 +506,7 @@ def parse_mon_icon_pics(config):
             icon_label = item.expr.name
             icon_decl = get_declaration_from_ast(gfx_ast, icon_label)
             icon_filepath = icon_decl.init.args.exprs[0].value.strip("\"")
-            icon_full_filepath = os.path.join(config['project_dir'], icon_filepath)
+            icon_full_filepath = os.path.join(config["project_dir"], icon_filepath)
             result[species] = icon_full_filepath
 
     return result
@@ -512,8 +516,8 @@ def parse_moves(config):
     """
     Parses and returns the project's battle moves data.
     """
-    filepath = os.path.join(config['project_dir'], "src/pokemon.c")
-    ast = parse_ast_from_file(filepath, config['project_dir'])
+    filepath = os.path.join(config["project_dir"], "src/pokemon.c")
+    ast = parse_ast_from_file(filepath, config["project_dir"])
 
     battle_moves = get_declaration_from_ast(ast, "gBattleMoves")
     if battle_moves == None:
@@ -538,5 +542,79 @@ def parse_moves(config):
                 field_value = expr.name
 
             result[move][field_name] = field_value
+
+    return result
+
+
+def parse_maps(config):
+    """
+    Parses and returns the map definitions in the project. It locates the maps
+    by globbing for map.json files in the maps directory.
+    """
+    maps = {}
+
+    map_filepaths = []
+    map_dir = os.path.join(config["project_dir"], "data/maps")
+    for dirpath, dirs, files in os.walk(map_dir):
+        for filename in files:
+            if filename == "map.json":
+                filepath = os.path.join(dirpath, filename)
+                map_filepaths.append(filepath)
+
+    for filepath in map_filepaths:
+        with open(filepath) as f:
+            map_data = json.load(f)
+            maps[map_data["id"]] = map_data
+
+    return maps
+
+
+def parse_region_map_sections(config):
+    """
+    Parses and returns the project's region map entries.
+    """
+    filepath = os.path.join(config["project_dir"], "src/region_map.c")
+    ast = parse_ast_from_file(filepath, config["project_dir"])
+
+    region_map_entries = get_declaration_from_ast(ast, "gRegionMapEntries")
+    if region_map_entries == None:
+        raise Exception("Failed to read region map sections from %s" % filepath)
+
+    mapsec_ids = parse_defines(config, "include/constants/region_map_sections.h", "MAPSEC_")
+    result = {}
+    for item in region_map_entries.init.exprs:
+        mapsec = mapsec_ids[item.name[0].value]
+        map_name_label = item.expr.exprs[4].name
+        map_name_decl = get_declaration_from_ast(ast, map_name_label)
+        map_name = map_name_decl.init.args.exprs[0].value.strip("\"")
+        result[mapsec] = {
+            'x': int(item.expr.exprs[0].value),
+            'y': int(item.expr.exprs[1].value),
+            'width': int(item.expr.exprs[2].value),
+            'height': int(item.expr.exprs[3].value),
+            'name': map_name,
+        }
+
+    return result
+
+
+def parse_defines(config, filepath, prefix=None):
+    """
+    Parses the #define directives in a file. If a prefix
+    is provided, then only the defines whose name starts
+    with the prefix will be returned.
+    """
+    result = {}
+    filepath = os.path.join(config["project_dir"], filepath)
+    with open(filepath, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+        for line in lines:
+            line = line.strip()
+            match = re.match(r"#define\s+(\w+)\s+(.+)", line)
+            if match:
+                name = match.group(1)
+                value = match.group(2)
+                if prefix is None or name.startswith(prefix):
+                    result[value] = name
 
     return result

@@ -12,6 +12,7 @@ from generators.mon_pics import MonPicsGenerator
 from generators.types import TypesGenerator
 from generators.abilities import AbilitiesGenerator
 from generators.moves import MovesGenerator
+from generators.map_sections import MapSectionsGenerator
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -101,6 +102,14 @@ project_data = {
         "func": parse.core_data.parse_items,
         "cache_file": "items.pickle"
     },
+    "maps": {
+        "func": parse.core_data.parse_maps,
+        "cache_file": "maps.pickle"
+    },
+    "region_map_sections": {
+        "func": parse.core_data.parse_region_map_sections,
+        "cache_file": "region_map_sections.pickle"
+    },
 }
 
 
@@ -172,6 +181,8 @@ def load_core_data(config):
     type_names = load_data("type_names", config)
     move_names = load_data("move_names", config)
     items = load_data("items", config)
+    maps = load_data("maps", config)
+    region_map_sections = load_data("region_map_sections", config)
     return {
         "mon_base_stats": mon_base_stats,
         "mon_dex_entries": mon_dex_entries,
@@ -196,6 +207,8 @@ def load_core_data(config):
         "type_names": type_names,
         "move_names": move_names,
         "items": items,
+        "maps": maps,
+        "region_map_sections": region_map_sections,
     }
 
 
@@ -244,6 +257,7 @@ if __name__ == "__main__":
         TypesGenerator,
         AbilitiesGenerator,
         MovesGenerator,
+        MapSectionsGenerator,
     ]
     for generator in artifact_generators:
         g = generator(config, core_data, core_funcs)
