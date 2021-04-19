@@ -13,6 +13,7 @@ from generators.types import TypesGenerator
 from generators.abilities import AbilitiesGenerator
 from generators.moves import MovesGenerator
 from generators.map_sections import MapSectionsGenerator
+from generators.maps import MapsGenerator
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -258,6 +259,7 @@ if __name__ == "__main__":
         AbilitiesGenerator,
         MovesGenerator,
         MapSectionsGenerator,
+        MapsGenerator,
     ]
     for generator in artifact_generators:
         g = generator(config, core_data, core_funcs)

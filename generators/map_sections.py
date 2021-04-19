@@ -30,7 +30,7 @@ class MapSectionsGenerator(BaseGenerator):
         """
         Generates all of the map section pages into the distribution directory.
         """
-        self.generate_region_map_section_pics(self.core_data["region_map_sections"], force=True)
+        self.generate_region_map_section_pics(self.core_data["region_map_sections"])
         for map_section in self.core_data["region_map_sections"]:
             self.render_template(
                 env,

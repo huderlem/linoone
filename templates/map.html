@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ map_id }}{% endblock %}
+
+{% block content %}
+{% set map_data = maps[map_id] %}
+<h1>Map - {{ map_id }}</h1>
+
+<p>Located in <a href="{{ make_url('map_sections/' + map_data['region_map_section'] + '.html') }}">{{ region_map_sections[map_data["region_map_section"]]["name"] }}</a></p>
+
+<img src="{{ make_url('images/region_map_sections/' + map_data['region_map_section'] + '.png') }}">
+
+{% if map_data['connections'] != None and map_data['connections']|length > 0 %}
+  <h2>Overworld Connections</h2>
+  <ul>
+  {% for connection in map_data['connections'] %}
+    <li>Connects {{ connection['direction'] }} to <a href="{{ make_url('maps/' + connection['map'] + '.html') }}">{{ connection['map'] }}</a></li>
+  {% endfor %}
+  </ul>
+{% endif %}
+
+{% if map_data['warp_events'] != None and map_data['warp_events']|length > 0 %}
+  <h2>Warp Connections</h2>
+  <ul>
+  {% for dest_map in map_data['warp_events']|map(attribute='dest_map')|unique %}
+    <li>Warps to <a href="{{ make_url('maps/' + dest_map + '.html') }}">{{ dest_map }}</a></li>
+  {% endfor %}
+  </ul>
+{% endif %}
+
+{% endblock %}

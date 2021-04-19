@@ -16,7 +16,7 @@
   <tbody>
     {% for cur_map in map_sections[map_section] %}
     <tr>
-      <td>{{ cur_map }}</td>
+      <td><a href="{{ make_url('maps/' + cur_map + '.html') }}">{{ cur_map }}</a></td>
     </tr>
     {% endfor %}
   </tbody>
