@@ -197,4 +197,24 @@
 </table>
 {% endif %}
 
+<br>
+<table>
+  <thead>
+    <tr>
+      <th>Locations Found</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if species not in encounters_map %}
+      <tr><td>None</td></tr>
+    {% else %}
+    {% for map_id in encounters_map[species] %}
+    <tr>
+      <td><a href="{{ make_url('maps/' + map_id + '.html') }}">{{ map_id }}</a></td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+  </tbody>
+</table>
+
 {% endblock %}

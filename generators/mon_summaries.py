@@ -14,8 +14,10 @@ class MonSummariesGenerator(BaseGenerator):
         that will be exposed to the template.
         """
         evolution_map = create_evolution_map(self.core_data["mon_evolutions"])
+        encounters_map = create_encounters_map(self.core_data["wild_mons"], self.core_data["id_to_species"])
         return {
             "evolution_map": evolution_map,
+            "encounters_map": encounters_map,
         }
 
 
@@ -62,3 +64,28 @@ def create_evolution_map(mon_evolutions):
             })
 
     return evos_map
+
+
+def create_encounters_map(wild_mons, id_to_species):
+    """
+    Creates a mapping of each species to the maps that it
+    can be found in.
+    """
+    result = {}
+    main_group = next(group for group in wild_mons["wild_encounter_groups"] if group["label"] == "gWildMonHeaders")
+    for map_encounters in main_group["encounters"]:
+        for field in main_group["fields"]:
+            if field["type"] not in map_encounters:
+                continue
+
+            for mon in map_encounters[field["type"]]["mons"]:
+                species = id_to_species[mon["species"]]
+                if species not in result:
+                    result[species] = set()
+
+                result[species].add(map_encounters["map"])
+
+    for species in result:
+        result[species] = list(result[species])
+
+    return result

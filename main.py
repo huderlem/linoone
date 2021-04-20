@@ -111,6 +111,14 @@ project_data = {
         "func": parse.core_data.parse_region_map_sections,
         "cache_file": "region_map_sections.pickle"
     },
+    "wild_mons": {
+        "func": parse.core_data.parse_wild_mons,
+        "cache_file": "wild_mons.pickle"
+    },
+    "species_defines": {
+        "func": parse.core_data.parse_species_defines,
+        "cache_file": "species_defines.pickle"
+    },
 }
 
 
@@ -184,6 +192,8 @@ def load_core_data(config):
     items = load_data("items", config)
     maps = load_data("maps", config)
     region_map_sections = load_data("region_map_sections", config)
+    wild_mons = load_data("wild_mons", config)
+    species_to_id, id_to_species = load_data("species_defines", config)
     return {
         "mon_base_stats": mon_base_stats,
         "mon_dex_entries": mon_dex_entries,
@@ -210,6 +220,9 @@ def load_core_data(config):
         "items": items,
         "maps": maps,
         "region_map_sections": region_map_sections,
+        "wild_mons": wild_mons,
+        "species_to_id": species_to_id,
+        "id_to_species": id_to_species,
     }
 
 

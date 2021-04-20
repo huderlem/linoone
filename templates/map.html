@@ -28,4 +28,170 @@
   </ul>
 {% endif %}
 
+{% if map_id in map_encounters %}
+{% set encounters = map_encounters[map_id] %}
+  <h2>Wild Pokémon</h2>
+  {% if 'land_mons' in encounters %}
+    <h3>Walking</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Species</th>
+          <th>Chance</th>
+          <th>Min</th>
+          <th>Max</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for species_id in encounters['land_mons'] %}
+        {% set species = id_to_species[species_id] %}
+        {% set national_num = species_to_national[species] %}
+        {% set summary = encounters['land_mons'][species_id] %}
+          <tr>
+            <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
+            <td>{{ summary['encounter_chance'] }}%</td>
+            <td>{{ summary['min_level'] }}</td>
+            <td>{{ summary['max_level'] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  {% if 'water_mons' in encounters %}
+    <h3>Surfing</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Species</th>
+          <th>Chance</th>
+          <th>Min</th>
+          <th>Max</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for species_id in encounters['water_mons'] %}
+        {% set species = id_to_species[species_id] %}
+        {% set national_num = species_to_national[species] %}
+        {% set summary = encounters['water_mons'][species_id] %}
+          <tr>
+            <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
+            <td>{{ summary['encounter_chance'] }}%</td>
+            <td>{{ summary['min_level'] }}</td>
+            <td>{{ summary['max_level'] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  {% if 'rock_smash_mons' in encounters %}
+    <h3>Rock Smash</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Species</th>
+          <th>Chance</th>
+          <th>Min</th>
+          <th>Max</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for species_id in encounters['rock_smash_mons'] %}
+        {% set species = id_to_species[species_id] %}
+        {% set national_num = species_to_national[species] %}
+        {% set summary = encounters['rock_smash_mons'][species_id] %}
+          <tr>
+            <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
+            <td>{{ summary['encounter_chance'] }}%</td>
+            <td>{{ summary['min_level'] }}</td>
+            <td>{{ summary['max_level'] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  {% if 'fishing_mons' in encounters and 'old_rod' in encounters['fishing_mons'] %}
+    <h3>Fishing - Old Rod</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Species</th>
+          <th>Chance</th>
+          <th>Min</th>
+          <th>Max</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for species_id in encounters['fishing_mons']['old_rod'] %}
+        {% set species = id_to_species[species_id] %}
+        {% set national_num = species_to_national[species] %}
+        {% set summary = encounters['fishing_mons']['old_rod'][species_id] %}
+          <tr>
+            <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
+            <td>{{ summary['encounter_chance'] }}%</td>
+            <td>{{ summary['min_level'] }}</td>
+            <td>{{ summary['max_level'] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  {% if 'fishing_mons' in encounters and 'good_rod' in encounters['fishing_mons'] %}
+    <h3>Fishing - Good Rod</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Species</th>
+          <th>Chance</th>
+          <th>Min</th>
+          <th>Max</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for species_id in encounters['fishing_mons']['good_rod'] %}
+        {% set species = id_to_species[species_id] %}
+        {% set national_num = species_to_national[species] %}
+        {% set summary = encounters['fishing_mons']['good_rod'][species_id] %}
+          <tr>
+            <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
+            <td>{{ summary['encounter_chance'] }}%</td>
+            <td>{{ summary['min_level'] }}</td>
+            <td>{{ summary['max_level'] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  {% if 'fishing_mons' in encounters and 'super_rod' in encounters['fishing_mons'] %}
+    <h3>Fishing - Super Rod</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Species</th>
+          <th>Chance</th>
+          <th>Min</th>
+          <th>Max</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for species_id in encounters['fishing_mons']['super_rod'] %}
+        {% set species = id_to_species[species_id] %}
+        {% set national_num = species_to_national[species] %}
+        {% set summary = encounters['fishing_mons']['super_rod'][species_id] %}
+          <tr>
+            <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
+            <td>{{ summary['encounter_chance'] }}%</td>
+            <td>{{ summary['min_level'] }}</td>
+            <td>{{ summary['max_level'] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endif %}
+
 {% endblock %}

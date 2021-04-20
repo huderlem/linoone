@@ -618,3 +618,29 @@ def parse_defines(config, filepath, prefix=None):
                     result[value] = name
 
     return result
+
+
+def parse_species_defines(config):
+    """
+    Parses the Pokémon species defines to handle interop data originating
+    from non-C files (like JSON).
+    """
+    species_to_id = parse_defines(config, "include/constants/species.h", "SPECIES_")
+    id_to_species = {}
+    for species in species_to_id:
+        id_to_species[species_to_id[species]] = species
+
+    return species_to_id, id_to_species
+
+
+def parse_wild_mons(config):
+    """
+    Parses and returns the wild Pokémon definitions in the project.
+    """
+    wild_mons = {}
+
+    filepath = os.path.join(config["project_dir"], "src/data/wild_encounters.json")
+    with open(filepath) as f:
+        wild_mons = json.load(f)
+
+    return wild_mons
