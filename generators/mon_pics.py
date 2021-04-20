@@ -7,7 +7,7 @@ import os
 import re
 
 from generators.base_generator import BaseGenerator
-from parse.util import parse_jasc_file
+from util.file_formats import parse_jasc_file
 
 from PIL import Image
 
