@@ -1,5 +1,5 @@
 # Linoone
-Linoone is a static website generator for Pokémon decomp projects. Many projects add custom Pokémon, moves, and much more.  Sometimes, authors like to provide a reference website for the players, similar to Bulbapedia or Serebii. Linoone aims to automatically generate a reference website like that, based on the data from the project's source code.
+Linoone is a static website generator for Pokémon decompilation projects (only [pokeemerald](https://github.com/pret/pokeemerald) is currently supported). Many projects add custom Pokémon, moves, and much more.  Sometimes, authors like to provide a reference website for the players, similar to Bulbapedia or Serebii. Linoone aims to automatically generate a reference website like that, based on the data from the project's source code.
 
 ***Linoone is in the very early development stage right now--it is not ready for actual use.***
 
