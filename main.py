@@ -45,10 +45,10 @@ if __name__ == "__main__":
 
     # Execute all of the artifact generators to build the static website.
     artifact_generators = [
+        MonPicsGenerator,
         IndexGenerator,
         PokedexGenerator,
         MonSummariesGenerator,
-        MonPicsGenerator,
         TypesGenerator,
         AbilitiesGenerator,
         MovesGenerator,
