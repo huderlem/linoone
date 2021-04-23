@@ -3,9 +3,13 @@
 #
 # Page generator for the Pokémon summary pages.
 #--------------------------------------------------------------------
-from generators.base_generator import BaseGenerator
+import base64
+import os
+import re
 
 from graphviz import Digraph
+
+from generators.base_generator import BaseGenerator
 
 
 class MonSummariesGenerator(BaseGenerator):
@@ -75,15 +79,36 @@ class MonSummariesGenerator(BaseGenerator):
         Uses graphviz to generate an SVG to display the full
         evolution chain for each species.
         """
+        # Navigate to the pokemon images distribution directory so that
+        # graphviz can load the images properly. We return back to the
+        # current directory once the graphviz work is completed.
+        cur_dir = os.getcwd()
+        os.chdir(os.path.join(self.config["dist_dir"], "images/pokemon"))
+
         svgs = {}
         species_names = self.core_data["mon_species_names"]
+        species_to_national = self.core_data["species_to_national"]
         for species in self.core_data["mon_base_stats"]:
             if species in evolution_map and (len(evolution_map[species]["to"]) > 0 or len(evolution_map[species]["from"]) > 0):
                 dot = Digraph("%s Evolution Chain" % species_names[species], format="svg", node_attr={"shape": "box"}, graph_attr={"rankdir": "LR"})
                 self.add_species_node(dot, species, highlight=True)
                 self.build_evolution_graph(dot, species, evolution_map, set(), set())
-                svgs[species] = dot.pipe().decode("utf-8")
+                svg_content = dot.pipe().decode("utf-8")
+                # Swap in the base64-encoded image data instead of the SVG's
+                # image path. Using paths is super problematic because of the way
+                # graphviz initially loads images and renders them inside the SVG.
+                # It makes generating functional SVGs for both local and live-web
+                # scenarios nearly impossible.
+                img_paths = re.findall(r'"\w+\.png"', svg_content)
+                for img_path in img_paths:
+                    with open(img_path.strip('"'), "rb") as img_f:
+                        encoded_img = base64.b64encode(img_f.read()).decode("ascii")
+                        img_content = '"data:image/png;base64,%s"' % encoded_img
+                        svg_content = svg_content.replace(img_path, img_content)
 
+                svgs[species] = svg_content
+
+        os.chdir(cur_dir)
         return svgs
 
 
@@ -116,13 +141,14 @@ class MonSummariesGenerator(BaseGenerator):
 
 
     def add_species_node(self, dot, species, highlight=False):
-        img_path = "images/pokemon/%s_front.png" % self.core_data["species_to_national"][species]
+        national_num = self.core_data["species_to_national"][species]
+        img_path = "%s_front.png" % national_num
         label = """<<table border="0">
             <tr><td>%s</td></tr>
             <tr><td><img scale="true" src="%s" /></td></tr>
         </table>>""" % (
             self.core_data["mon_species_names"][species],
-            self.core_funcs["make_url"](img_path)
+            img_path
         )
         href = self.core_funcs["make_url"]("pokedex/%s.html" % self.core_data["species_to_national"][species])
         extra_args = {}
