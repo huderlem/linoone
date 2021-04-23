@@ -4,6 +4,11 @@
     {% block head %}
     <title>{% block title %}{% endblock %} - {{ website_title }}</title>
     {% endblock %}
+    <style>
+    	svg {
+    		image-rendering: pixelated;
+    	}
+	</style>
 </head>
 <body>
     <div id="content">{% block content %}{% endblock %}</div>

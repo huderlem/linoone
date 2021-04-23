@@ -12,10 +12,11 @@ class BaseGenerator:
     Base class that all artifact generators inherit. Child class
     generators should override methods as needed.
     """
-    def __init__(self, config, core_data, core_funcs):
+    def __init__(self, config, core_data, core_funcs, project_settings):
         self.config = config
         self.core_data = core_data
         self.core_funcs = core_funcs
+        self.project_settings = project_settings
         self.custom_data = {}
 
 

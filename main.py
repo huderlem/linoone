@@ -2,8 +2,11 @@ import argparse
 import os
 import re
 
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+
 from setup.core_data import load_core_data
 from setup.core_funcs import load_core_funcs
+from settings import load_project_settings
 from generators import (
     AbilitiesGenerator,
     IndexGenerator,
@@ -15,8 +18,6 @@ from generators import (
     PokedexGenerator,
     TypesGenerator,
 )
-
-from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
 if __name__ == "__main__":
@@ -34,6 +35,7 @@ if __name__ == "__main__":
     # Load core data and functions to be used by generators and their templates.
     core_data = load_core_data(config)
     core_funcs = load_core_funcs(config)
+    project_settings = load_project_settings(config)
 
     # Create Jinja templating environment
     env = Environment(
@@ -54,5 +56,5 @@ if __name__ == "__main__":
         MapsGenerator,
     ]
     for generator in artifact_generators:
-        g = generator(config, core_data, core_funcs)
+        g = generator(config, core_data, core_funcs, project_settings)
         g.run(env)

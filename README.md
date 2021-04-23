@@ -10,6 +10,8 @@ Linoone is built with Python 3. It has a few dependencies, which are listed in `
 pip install -r requirements.txt
 ```
 
+Additionally, you must have [Graphviz](https://graphviz.org/download/) installed and available on your path.
+
 Linoone uses `pycparser` to parse the project's C files. `pycparser` has a couple issues with parsing the vanilla pokeemerald source code. You'll have to make a couple manual modifications to pokeemerald first:
 
 In `include/global.h`, make the following modifications:
