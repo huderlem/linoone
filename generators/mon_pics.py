@@ -27,7 +27,7 @@ class MonPicsGenerator(BaseGenerator):
 
         type_images_dir = os.path.join(self.config["dist_dir"], "images/types")
         os.makedirs(type_images_dir, exist_ok=True)
-        self.generate_type_pics(self.core_data["type_names"], self.project_settings["types"])
+        self.generate_type_pics(self.core_data["type_names"], self.core_data["type_icon_palette_slots"], self.project_settings["types"])
 
 
     def generate_mon_pics(self, species_to_pics, species_to_national, name, crop, force=False):
@@ -47,7 +47,7 @@ class MonPicsGenerator(BaseGenerator):
                 else:
                     img = Image.open(png_filepath)
                     cropped_img = img.crop(crop)
-                    cropped_img.save(dest_filepath)
+                    cropped_img.save(dest_filepath, transparency=0, optimize=1)
 
 
     def generate_shiny_mon_pics(self, species_to_pics, species_to_national, name, crop, mon_shiny_palettes, force=False):
@@ -70,17 +70,26 @@ class MonPicsGenerator(BaseGenerator):
                         shiny_palette = parse_jasc_file(palette_filepath)
                         if shiny_palette is not None:
                             cropped_img.putpalette(shiny_palette)
-                            cropped_img.save(dest_filepath)
+                            cropped_img.save(dest_filepath, transparency=0, optimize=1)
                 except FileNotFoundError:
                     print("Skipping shiny %s pic for species %s because %s doesn't exist." % (name, species, png_filepath))
 
 
-    def generate_type_pics(self, type_names, type_settings):
+    def generate_type_pics(self, type_names, type_icon_palette_slots, type_settings, force=False):
         """
         Generates the Pokémon type icon images.
         """
+        palettes_cache = {}
         for t in type_names:
             source_filepath = os.path.join(self.config["project_dir"], type_settings.types[t]["icon_filepath"])
             dest_filepath = os.path.join(self.config["dist_dir"], "images/types/%s.png" % t)
-            img = Image.open(source_filepath)
-            img.save(dest_filepath)
+            slot = type_icon_palette_slots[t]
+            palette_filepath = os.path.join(self.config["project_dir"], "graphics/types/%s" % type_settings.palette_slot_files[slot])
+            if palette_filepath not in palettes_cache:
+                palette = parse_jasc_file(palette_filepath)
+                palettes_cache[palette_filepath] = palette
+
+            if force or not os.path.exists(dest_filepath):
+                img = Image.open(source_filepath)
+                img.putpalette(palettes_cache[palette_filepath])
+                img.save(dest_filepath, transparency=0, optimize=1)

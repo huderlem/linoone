@@ -65,6 +65,12 @@ class TypesSettings:
                 "icon_filepath": "graphics/types/dark.png",
             },
         }
+        # Maps the in-game OAM palette slot to the move_types_*.pal files.
+        self.palette_slot_files = {
+            "13": "move_types_1.pal",
+            "14": "move_types_2.pal",
+            "15": "move_types_3.pal",
+        }
 
 
 types = TypesSettings()
