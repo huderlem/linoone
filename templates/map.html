@@ -1,3 +1,5 @@
+{% import 'macros.html' as macros with context %}
+
 {% extends "base.html" %}
 
 {% block title %}{{ map_id }}{% endblock %}
@@ -36,7 +38,10 @@
     <table>
       <thead>
         <tr>
+          <th></th>
+          <th></th>
           <th>Species</th>
+          <th>Type(s)</th>
           <th>Chance</th>
           <th>Min</th>
           <th>Max</th>
@@ -48,7 +53,7 @@
         {% set national_num = species_to_national[species] %}
         {% set summary = encounters['land_mons'][species_id] %}
           <tr>
-            <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
+            {{ macros.mon_table_entry_standard(national_num) }}
             <td>{{ summary['encounter_chance'] }}%</td>
             <td>{{ summary['min_level'] }}</td>
             <td>{{ summary['max_level'] }}</td>
@@ -63,7 +68,10 @@
     <table>
       <thead>
         <tr>
+          <th></th>
+          <th></th>
           <th>Species</th>
+          <th>Type(s)</th>
           <th>Chance</th>
           <th>Min</th>
           <th>Max</th>
@@ -75,7 +83,7 @@
         {% set national_num = species_to_national[species] %}
         {% set summary = encounters['water_mons'][species_id] %}
           <tr>
-            <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
+            {{ macros.mon_table_entry_standard(national_num) }}
             <td>{{ summary['encounter_chance'] }}%</td>
             <td>{{ summary['min_level'] }}</td>
             <td>{{ summary['max_level'] }}</td>
@@ -90,7 +98,10 @@
     <table>
       <thead>
         <tr>
+          <th></th>
+          <th></th>
           <th>Species</th>
+          <th>Type(s)</th>
           <th>Chance</th>
           <th>Min</th>
           <th>Max</th>
@@ -102,7 +113,7 @@
         {% set national_num = species_to_national[species] %}
         {% set summary = encounters['rock_smash_mons'][species_id] %}
           <tr>
-            <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
+            {{ macros.mon_table_entry_standard(national_num) }}
             <td>{{ summary['encounter_chance'] }}%</td>
             <td>{{ summary['min_level'] }}</td>
             <td>{{ summary['max_level'] }}</td>
@@ -117,7 +128,10 @@
     <table>
       <thead>
         <tr>
+          <th></th>
+          <th></th>
           <th>Species</th>
+          <th>Type(s)</th>
           <th>Chance</th>
           <th>Min</th>
           <th>Max</th>
@@ -129,7 +143,7 @@
         {% set national_num = species_to_national[species] %}
         {% set summary = encounters['fishing_mons']['old_rod'][species_id] %}
           <tr>
-            <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
+            {{ macros.mon_table_entry_standard(national_num) }}
             <td>{{ summary['encounter_chance'] }}%</td>
             <td>{{ summary['min_level'] }}</td>
             <td>{{ summary['max_level'] }}</td>
@@ -144,7 +158,10 @@
     <table>
       <thead>
         <tr>
+          <th></th>
+          <th></th>
           <th>Species</th>
+          <th>Type(s)</th>
           <th>Chance</th>
           <th>Min</th>
           <th>Max</th>
@@ -156,7 +173,7 @@
         {% set national_num = species_to_national[species] %}
         {% set summary = encounters['fishing_mons']['good_rod'][species_id] %}
           <tr>
-            <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
+            {{ macros.mon_table_entry_standard(national_num) }}
             <td>{{ summary['encounter_chance'] }}%</td>
             <td>{{ summary['min_level'] }}</td>
             <td>{{ summary['max_level'] }}</td>
@@ -171,7 +188,10 @@
     <table>
       <thead>
         <tr>
+          <th></th>
+          <th></th>
           <th>Species</th>
+          <th>Type(s)</th>
           <th>Chance</th>
           <th>Min</th>
           <th>Max</th>
@@ -183,7 +203,7 @@
         {% set national_num = species_to_national[species] %}
         {% set summary = encounters['fishing_mons']['super_rod'][species_id] %}
           <tr>
-            <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
+            {{ macros.mon_table_entry_standard(national_num) }}
             <td>{{ summary['encounter_chance'] }}%</td>
             <td>{{ summary['min_level'] }}</td>
             <td>{{ summary['max_level'] }}</td>

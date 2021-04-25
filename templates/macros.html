@@ -1,0 +1,35 @@
+{#
+	mon_table_entry_standard
+	Macro for displaying a Pokémon summary in a table row.
+  Displays 4 <td> items: dex number, icon, name, and type icons.
+#}
+{% macro mon_table_entry_standard(national_num) %}
+  {% set species = national_to_species[national_num] %}
+  {% set type1 = mon_base_stats[species].type1 %}
+  {% set type2 = mon_base_stats[species].type2 %}
+  {% set mon_url = make_url('pokedex/' + national_num + '.html') %}
+  <td>{{ national_num }}</td>
+  <td><a href="{{ mon_url }}"><img src="{{ make_url('images/pokemon/' + national_num + '_icon.png') }}"></a></td>
+  <td><a href="{{ mon_url }}">{{ mon_species_names[species] }}</a></td>
+  <td>
+    <a href="{{ make_url('types/' + type1 + '.html') }}"><img src="{{ make_url('images/types/' + type1 + '.png') }}"></a>
+    {% if type2 != type1 %}
+      <a href="{{ make_url('types/' + type2 + '.html') }}"><img src="{{ make_url('images/types/' + type2 + '.png') }}"></a>
+    {% endif %}
+  </td>
+{% endmacro %}
+
+
+{#
+  move_table_entry_standard
+  Macro for displaying a battle move summary in a table row.
+  Displays 5 <td> items: name, type icons, power, accuracy, and PP.
+#}
+{% macro move_table_entry_standard(move) %}
+  {% set move_type = moves[move]['type'] %}
+  <td><a href="{{ make_url('moves/' + move + '.html') }}">{{ move_names[move] }}</a></td>
+  <td><a href="{{ make_url('types/' + move_type + '.html') }}"><img src="{{ make_url('images/types/' + move_type + '.png') }}"></a></td>
+  <td>{{ moves[move]['power'] }}</td>
+  <td>{{ moves[move]['accuracy'] }}%</td>
+  <td>{{ moves[move]['pp'] }}</td>
+{% endmacro %}

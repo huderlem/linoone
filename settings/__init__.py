@@ -1,4 +1,5 @@
 from .evolution_methods import evolution_methods
+from .types import types
 
 def load_project_settings(config):
     """
@@ -8,4 +9,5 @@ def load_project_settings(config):
     """
     return {
         "evolution_methods": evolution_methods,
+        "types": types,
     }

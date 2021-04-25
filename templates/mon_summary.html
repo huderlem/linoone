@@ -1,3 +1,5 @@
+{% import 'macros.html' as macros with context %}
+
 {% extends "base.html" %}
 
 {% block title %}{{ mon_species_names[species] }}{% endblock %}
@@ -99,91 +101,105 @@
   </tbody>
 </table>
 <br>
+<h2>Learnset by Leveling Up</h2>
 <table>
   <thead>
     <tr>
-      <th colspan="2">Learnset by Leveling Up</th>
+      <th>Level</th>
+      <th>Move</th>
+      <th>Type</th>
+      <th>Power</th>
+      <th>Accuracy</th>
+      <th>PP</th>
     </tr>
   </thead>
   <tbody>
     {% for item in mon_learnsets[species] %}
     <tr>
       <td>{{ item["level"] }}</td>
-      <td><a href="{{ make_url('moves/' + item['move'] + '.html') }}">{{ move_names[item['move']] }}</a></td>
+      {{ macros.move_table_entry_standard(item['move']) }}
     </tr>
     {% endfor %}
   </tbody>
 </table>
 <br>
+<h2>Learnset by TM/HM</h2>
 <table>
   <thead>
     <tr>
-      <th colspan="2">Learnset by TM/HM</th>
+      <th>Item</th>
+      <th>Move</th>
+      <th>Type</th>
+      <th>Power</th>
+      <th>Accuracy</th>
+      <th>PP</th>
     </tr>
   </thead>
   <tbody>
     {% for item in mon_tmhm_learnsets[species] %}
-    {% set move = item_to_move[item] %}
-    <tr>
-      <td>{{ items[item]['name'] }}</td>
-      <td><a href="{{ make_url('moves/' + move + '.html') }}">{{ move_names[move] }}</a></td>
-    </tr>
+      <tr>
+        <td>{{ items[item]['name'] }}</td>
+        {{ macros.move_table_entry_standard(item_to_move[item]) }}
+      </tr>
     {% endfor %}
   </tbody>
 </table>
 
 {% if species in mon_egg_moves %}
-<br>
+<h2>Egg Moves</h2>
 <table>
   <thead>
     <tr>
-      <th colspan="2">Egg Moves</th>
+      <th>Move</th>
+      <th>Type</th>
+      <th>Power</th>
+      <th>Accuracy</th>
+      <th>PP</th>
     </tr>
   </thead>
   <tbody>
     {% for move in mon_egg_moves[species] %}
-    <tr>
-      <td><a href="{{ make_url('moves/' + move + '.html') }}">{{ move_names[move] }}</a></td>
-    </tr>
+      <tr>
+        {{ macros.move_table_entry_standard(move) }}
+      </tr>
     {% endfor %}
   </tbody>
 </table>
 {% endif %}
 
 {% if species in mon_tutor_moves %}
-<br>
+<h2>Learnset by Move Tutor</h2>
 <table>
   <thead>
     <tr>
-      <th colspan="2">Learnset by Move Tutor</th>
+      <th>Move</th>
+      <th>Type</th>
+      <th>Power</th>
+      <th>Accuracy</th>
+      <th>PP</th>
     </tr>
   </thead>
   <tbody>
     {% for move in mon_tutor_moves[species] %}
-    <tr>
-      <td><a href="{{ make_url('moves/' + move + '.html') }}">{{ move_names[move] }}</a></td>
-    </tr>
+      <tr>
+        {{ macros.move_table_entry_standard(move) }}
+      </tr>
     {% endfor %}
   </tbody>
 </table>
 {% endif %}
 
-<br>
+<h2>Locations Found</h2>
 <table>
-  <thead>
-    <tr>
-      <th>Locations Found</th>
-    </tr>
-  </thead>
   <tbody>
     {% if species not in encounters_map %}
       <tr><td>None</td></tr>
     {% else %}
-    {% for map_id in encounters_map[species] %}
-    <tr>
-      <td><a href="{{ make_url('maps/' + map_id + '.html') }}">{{ map_id }}</a></td>
-    </tr>
-    {% endfor %}
+      {% for map_id in encounters_map[species] %}
+      <tr>
+        <td><a href="{{ make_url('maps/' + map_id + '.html') }}">{{ map_id }}</a></td>
+      </tr>
+      {% endfor %}
     {% endif %}
   </tbody>
 </table>

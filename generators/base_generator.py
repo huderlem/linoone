@@ -5,8 +5,6 @@
 #--------------------------------------------------------------------
 import os
 
-from bs4 import BeautifulSoup as bs
-
 class BaseGenerator:
     """
     Base class that all artifact generators inherit. Child class
@@ -41,13 +39,11 @@ class BaseGenerator:
             **self.custom_data,
             **extra_data
         )
-        soup = bs(output, "html.parser")
-        prettyHTML = soup.prettify(formatter="html5")
         filepath = os.path.join(self.config["dist_dir"], dest_filepath)
         file_dir = os.path.dirname(os.path.realpath(filepath))
         os.makedirs(file_dir, exist_ok=True)
         with open(filepath, "w", encoding="utf-8") as f:
-            f.write(prettyHTML)
+            f.write(output)
 
 
     def prepare_template_data(self):

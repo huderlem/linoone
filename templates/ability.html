@@ -1,3 +1,5 @@
+{% import 'macros.html' as macros with context %}
+
 {% extends "base.html" %}
 
 {% block title %}{{ ability_names[ability] }}{% endblock %}
@@ -15,14 +17,13 @@
   </thead>
   <tbody>
     {% for national_num in ability_mons[ability] %}
-    {% set species = national_to_species[national_num] %}
-    {% set ability1 = mon_base_stats[species].abilities[0] %}
-    {% set ability2 = mon_base_stats[species].abilities[1] %}
-    <tr>
-      <td>#{{ national_num }}</td>
-      <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
-      <td><a href="{{ make_url('abilities/' + ability1 + '.html') }}">{{ ability_names[ability1] }}</a>{% if ability2 != '0' %} / <a href="{{ make_url('abilities/' + ability2 + '.html') }}">{{ ability_names[ability2] }}</a>{% endif %}</td>
-    </tr>
+      {% set species = national_to_species[national_num] %}
+      {% set ability1 = mon_base_stats[species].abilities[0] %}
+      {% set ability2 = mon_base_stats[species].abilities[1] %}
+      <tr>
+        {{ macros.mon_table_entry_standard(national_num) }}
+        <td><a href="{{ make_url('abilities/' + ability1 + '.html') }}">{{ ability_names[ability1] }}</a>{% if ability2 != '0' %} / <a href="{{ make_url('abilities/' + ability2 + '.html') }}">{{ ability_names[ability2] }}</a>{% endif %}</td>
+      </tr>
     {% endfor %}
   </tbody>
 </table>

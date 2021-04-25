@@ -1,3 +1,5 @@
+{% import 'macros.html' as macros with context %}
+
 {% extends "base.html" %}
 
 {% block title %}{{ move_names[move] }}{% endblock %}
@@ -10,12 +12,8 @@
 <p>{{ move_names[move] }} is {{ items[move_to_item[move]]['name'] }}.</p>
 {% endif %}
 
+<h2>Move Data</h2>
 <table>
-  <thead>
-    <tr>
-      <th>Move Data</th>
-    </tr>
-  </thead>
   <tbody>
     <tr>
       {% set type = moves[move]['type'] %}
@@ -36,81 +34,56 @@
     </tr>
   </tbody>
 </table>
-<br>
+
+{% if move in levelup_move_mons %}
+<h2>Pokémon that learn {{ move_names[move] }} by Leveling Up</h2>
 <table>
-  <thead>
-    <tr>
-      <th colspan="3">Pokémon that learn {{ move_names[move] }} by Leveling Up</th>
-    </tr>
-  </thead>
   <tbody>
     {% for item in levelup_move_mons[move] %}
-    {% set national_num = item['national_num'] %}
-    {% set species = national_to_species[national_num] %}
-    {% set level = item['level'] %}
-    <tr>
-      <td>#{{ national_num }}</td>
-      <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
-      <td>at level {{ level }}</td>
-    </tr>
+      {% set national_num = item['national_num'] %}
+      {% set level = item['level'] %}
+      <tr>
+        {{ macros.mon_table_entry_standard(national_num) }}
+        <td>at level {{ level }}</td>
+      </tr>
     {% endfor %}
   </tbody>
 </table>
-<br>
+{% endif %}
 {% if move in tmhm_move_mons %}
+<h2>Pokémon that learn {{ move_names[move] }} by TM/HM</h2>
 <table>
-  <thead>
-    <tr>
-      <th colspan="2">Pokémon that learn {{ move_names[move] }} by TM/HM</th>
-    </tr>
-  </thead>
   <tbody>
     {% for national_num in tmhm_move_mons[move] %}
-    {% set species = national_to_species[national_num] %}
-    <tr>
-      <td>#{{ national_num }}</td>
-      <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
-    </tr>
+      <tr>
+        {{ macros.mon_table_entry_standard(national_num) }}
+      </tr>
     {% endfor %}
   </tbody>
 </table>
 {% endif %}
 
 {% if move in egg_move_mons %}
-<br>
+<h2>Pokémon that learn {{ move_names[move] }} as an Egg Move</h2>
 <table>
-  <thead>
-    <tr>
-      <th colspan="2">Pokémon that learn {{ move_names[move] }} as an Egg Move</th>
-    </tr>
-  </thead>
   <tbody>
     {% for national_num in egg_move_mons[move] %}
-    {% set species = national_to_species[national_num] %}
-    <tr>
-      <td>#{{ national_num }}</td>
-      <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
-    </tr>
+      <tr>
+        {{ macros.mon_table_entry_standard(national_num) }}
+      </tr>
     {% endfor %}
   </tbody>
 </table>
 {% endif %}
 
 {% if move in tutor_move_mons %}
-<br>
+<h2>Pokémon that learn {{ move_names[move] }} from a Move Tutor</h2>
 <table>
-  <thead>
-    <tr>
-      <th colspan="2">Pokémon that learn {{ move_names[move] }} from a Move Tutor</th>
-    </tr>
-  </thead>
   <tbody>
     {% for national_num in tutor_move_mons[move] %}
-    {% set species = national_to_species[national_num] %}
-    <tr>
-      <td>#{{ national_num }}</td>
-      <td><a href="{{ make_url('pokedex/' + national_num + '.html') }}">{{ mon_species_names[species] }}</a></td>
-    </tr>
+      <tr>
+        {{ macros.mon_table_entry_standard(national_num) }}
+      </tr>
     {% endfor %}
   </tbody>
 </table>
