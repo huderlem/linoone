@@ -422,7 +422,7 @@ def parse_species_mapping(config):
     filepath = os.path.join(config["project_dir"], "src/pokemon.c")
     ast = parse_ast_from_file(filepath, config["project_dir"])
 
-    mappings = get_declaration_from_ast(ast, "gSpeciesToNationalPokedexNum")
+    mappings = get_declaration_from_ast(ast, "sSpeciesToNationalPokedexNum")
     if mappings == None:
         raise Exception("Failed to read species-to-national-dex mapping from %s" % filepath)
 
