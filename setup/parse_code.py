@@ -25,9 +25,8 @@ def parse_ast_from_file(filepath, project_path):
         return ast_cache[filepath]
 
     # TODO: There are some issues with the decomp code and pycparser.
-    #       Had to make these modifications to decomp source code:
+    #       Had to make this modifications to decomp source code:
     #       1. In global.h, #define __attribute__(x)
-    #       2. In global.h, #define TEST_BUTTON(field, button) ((field) & (button))
     ast = parse_file(filepath, use_cpp=True, cpp_args=[
         r'-I%s' % os.path.join(project_path, "tools/agbcc/include"),
         r'-I%s' % os.path.join(project_path, "tools/agbcc"),
