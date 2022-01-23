@@ -12,9 +12,9 @@ pip install -r requirements.txt
 
 Additionally, you must have [Graphviz](https://graphviz.org/download/) installed and available on your path.
 
-Linoone uses `pycparser` to parse the project's C files. `pycparser` has a couple issues with parsing the vanilla pokeemerald source code. You'll have to make a couple manual modifications to pokeemerald first:
+Linoone uses `pycparser` to parse the project's C files. `pycparser` has a couple issues with parsing the vanilla pokeemerald source code.
 
-In `include/global.h`, stub out `__attribute__` at the top of the file.
+In your pokeemerald repo, in `include/global.h`, stub out `__attribute__` at the top of the file.
 ```diff
 @@ -1,6 +1,8 @@
  #ifndef GUARD_GLOBAL_H
