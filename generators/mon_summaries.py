@@ -34,15 +34,16 @@ class MonSummariesGenerator(BaseGenerator):
         Generates all of the Pokémon summary pages into the distribution directory.
         """
         for national_num in self.core_data["national_to_species"]:
-            self.render_template(
-                env,
-                "mon_summary.html",
-                "pokedex/%s.html" % national_num,
-                extra_data={
-                    "national_num": national_num,
-                    "species": self.core_data["national_to_species"][national_num],
-                }
-            )
+            if national_num in self.core_data["mon_dex_entries"]:
+                self.render_template(
+                    env,
+                    "mon_summary.html",
+                    "pokedex/%s.html" % national_num,
+                    extra_data={
+                        "national_num": national_num,
+                        "species": self.core_data["national_to_species"][national_num],
+                    }
+                )
 
 
     def create_evolution_sets(self):

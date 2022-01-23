@@ -472,6 +472,8 @@ def parse_mon_gfx(config, pic_table_name, pic_table_file, pic_def_file):
     pics_filepath = os.path.join(config["project_dir"], pic_def_file)
     pics_ast = parse_ast_from_file(pics_filepath, config["project_dir"])
 
+    # TODO: Handle Castform's unique gfx filenames
+
     result = {}
     for item in pics.init.exprs:
         if type(item.name[0]) == Constant:
