@@ -48,6 +48,22 @@ def parse_base_stats(config):
     return result
 
 
+def parse_dex_enums(config):
+    """
+    Parses and returns the project's National Pokédex enums.
+    """
+    filepath = os.path.join(config["project_dir"], "include/constants/pokedex.h")
+    ast = parse_ast_from_file(filepath, config["project_dir"])
+    dex_enums = {}
+    i = 0
+    for dex_enum in ast.ext[0].type.values.enumerators:
+        dex_enum.value = i
+        i += 1
+        dex_enums[dex_enum.name] = dex_enum.value
+
+    return dex_enums
+
+
 def parse_dex_entries(config):
     """
     Parses and returns the project's mon pokedex entries.
@@ -60,10 +76,12 @@ def parse_dex_entries(config):
     if dex_entries == None:
         raise Exception("Failed to read mon pokedex entries stats from %s" % filepath)
 
+    dex_enums = parse_dex_enums(config)
+
     result = {}
     for item in dex_entries.init.exprs:
-        species = item.name[0].value
-        result[species] = {}
+        dex_num = dex_enums[item.name[0].name]
+        result[dex_num] = {}
         for field in item.expr.exprs:
             typ = type(field)
             if typ != NamedInitializer:
@@ -87,7 +105,7 @@ def parse_dex_entries(config):
                 mon_text = get_declaration_from_ast(ast, field_value)
                 field_value = mon_text.init.args.exprs[0].value.strip("\"")
 
-            result[species][field_name] = field_value
+            result[dex_num][field_name] = field_value
 
     return result
 
@@ -426,12 +444,14 @@ def parse_species_mapping(config):
     if mappings == None:
         raise Exception("Failed to read species-to-national-dex mapping from %s" % filepath)
 
+    dex_enums = parse_dex_enums(config)
+
     species_to_national = {}
     national_to_species = {}
     for item in mappings.init.exprs:
-        if type(item.expr) == Constant:
+        if type(item.expr) == ID:
             species = item.name[0].left.value
-            national = item.expr.value
+            national = dex_enums[item.expr.name]
             species_to_national[species] = national
             national_to_species[national] = species
 
@@ -673,6 +693,10 @@ project_data = {
         "func": parse_base_stats,
         "cache_file": "mon_base_stats.pickle"
     },
+    "mon_dex_enums": {
+        "func": parse_dex_enums,
+        "cache_file": "mon_dex_enums.pickle"
+    },
     "mon_dex_entries": {
         "func": parse_dex_entries,
         "cache_file": "mon_dex_entries.pickle"
@@ -802,6 +826,7 @@ def load_core_data(config):
     available to the page generator templates.
     """
     mon_base_stats = load_data("mon_base_stats", config)
+    mon_dex_enums = load_data("mon_dex_enums", config)
     mon_dex_entries = load_data("mon_dex_entries", config)
     mon_learnsets = load_data("mon_learnsets", config)
     mon_tmhm_learnsets = load_data("mon_tmhm_learnsets", config)
@@ -829,6 +854,7 @@ def load_core_data(config):
     type_icon_palette_slots = load_data("type_icon_palette_slots", config)
     return {
         "mon_base_stats": mon_base_stats,
+        "mon_dex_enums": mon_dex_enums,
         "mon_dex_entries": mon_dex_entries,
         "mon_learnsets": mon_learnsets,
         "mon_tmhm_learnsets": mon_tmhm_learnsets,
