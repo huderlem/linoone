@@ -14,8 +14,7 @@ Additionally, you must have [Graphviz](https://graphviz.org/download/) installed
 
 Linoone uses `pycparser` to parse the project's C files. `pycparser` has a couple issues with parsing the vanilla pokeemerald source code. You'll have to make a couple manual modifications to pokeemerald first:
 
-In `include/global.h`, make the following modifications:
-1. Stub out `__attribute__` at the top of the file.
+In `include/global.h`, stub out `__attribute__` at the top of the file.
 ```diff
 @@ -1,6 +1,8 @@
  #ifndef GUARD_GLOBAL_H
@@ -28,20 +27,8 @@ In `include/global.h`, make the following modifications:
  #include "config.h" // we need to define config before gba headers as print stuff needs the functions nulled before defines.
 @@ -107,7 +109,7 @@
 ```
-2. Fix the `TEST_BUTTON` macro.
-```diff
-@@ -107,7 +109,7 @@
- #define T2_READ_PTR(ptr) (void*) T2_READ_32(ptr)
 
- // Macros for checking the joypad
--#define TEST_BUTTON(field, button) ({(field) & (button);})
-+#define TEST_BUTTON(field, button) ((field) & (button))
- #define JOY_NEW(button) TEST_BUTTON(gMain.newKeys,  button)
- #define JOY_HELD(button)  TEST_BUTTON(gMain.heldKeys, button)
- #define JOY_HELD_RAW(button) TEST_BUTTON(gMain.heldKeysRaw, button)
-```
-
-Finally, there is a bug in `pycparser` which makes it choke on various unicode characters in the decomp files. You need to manually apply this fix to your local installation of `pycparser`: https://github.com/eliben/pycparser/issues/415
+There is also a bug in `pycparser` which makes it choke on various unicode characters in the decomp files. You need to manually apply this fix to your local installation of `pycparser`: https://github.com/eliben/pycparser/issues/415
 
 That's all--you should now be ready to run Linoone. See the Usage section below.
 
