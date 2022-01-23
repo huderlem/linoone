@@ -5,14 +5,14 @@
 {% block title %}{{ mon_species_names[species] }}{% endblock %}
 
 {% block content %}
-<h1>#{{ national_num }} - {{ mon_species_names[species] }}</h1>
+<h1>#{{ national_num|string }} - {{ mon_species_names[species] }}</h1>
 
-<img src="{{ make_url('images/pokemon/' + national_num + '_front.png') }}">
-<img src="{{ make_url('images/pokemon/' + national_num + '_back.png') }}">
-<img src="{{ make_url('images/pokemon/' + national_num + '_icon.png') }}">
+<img src="{{ make_url('images/pokemon/' + national_num|string + '_front.png') }}">
+<img src="{{ make_url('images/pokemon/' + national_num|string + '_back.png') }}">
+<img src="{{ make_url('images/pokemon/' + national_num|string + '_icon.png') }}">
 <br>
-<img src="{{ make_url('images/pokemon/' + national_num + '_front_shiny.png') }}">
-<img src="{{ make_url('images/pokemon/' + national_num + '_back_shiny.png') }}">
+<img src="{{ make_url('images/pokemon/' + national_num|string + '_front_shiny.png') }}">
+<img src="{{ make_url('images/pokemon/' + national_num|string + '_back_shiny.png') }}">
 <p><em>{{ mon_dex_entries[national_num].description.replace("\\n", " ") }}</em></p>
 
 <table>

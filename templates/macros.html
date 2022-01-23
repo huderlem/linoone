@@ -7,9 +7,9 @@
   {% set species = national_to_species[national_num] %}
   {% set type1 = mon_base_stats[species].type1 %}
   {% set type2 = mon_base_stats[species].type2 %}
-  {% set mon_url = make_url('pokedex/' + national_num + '.html') %}
-  <td>{{ national_num }}</td>
-  <td><a href="{{ mon_url }}"><img src="{{ make_url('images/pokemon/' + national_num + '_icon.png') }}"></a></td>
+  {% set mon_url = make_url('pokedex/' + national_num|string + '.html') %}
+  <td>{{ national_num|string }}</td>
+  <td><a href="{{ mon_url }}"><img src="{{ make_url('images/pokemon/' + national_num|string + '_icon.png') }}"></a></td>
   <td><a href="{{ mon_url }}">{{ mon_species_names[species] }}</a></td>
   <td>
     <a href="{{ make_url('types/' + type1 + '.html') }}"><img src="{{ make_url('images/types/' + type1 + '.png') }}"></a>
