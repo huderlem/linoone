@@ -50,8 +50,8 @@ class MapSectionsGenerator(BaseGenerator):
         """
         dest_images_dir = os.path.join(self.config["dist_dir"], "images/region_map_sections")
         os.makedirs(dest_images_dir, exist_ok=True)
-        tiles_filepath = os.path.join(self.config["project_dir"], "graphics/pokenav/region_map.png")
-        tilemap_filepath = os.path.join(self.config["project_dir"], "graphics/pokenav/region_map_map.bin")
+        tiles_filepath = os.path.join(self.config["project_dir"], "graphics/pokenav/region_map/map.png")
+        tilemap_filepath = os.path.join(self.config["project_dir"], "graphics/pokenav/region_map/map.bin")
         tiles_img = Image.open(tiles_filepath)
         tiles_img_width = tiles_img.size[0] // 8
         with open(tilemap_filepath, "rb") as f:
